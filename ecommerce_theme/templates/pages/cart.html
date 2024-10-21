@@ -1,0 +1,511 @@
+{% extends "templates/web.html" %}
+
+{% block title %} {{ _("Shopping Cart") }} {% endblock %}
+
+
+{% block page_content %}
+
+	{% from "templates/includes/macros.html" import item_name_and_description %}
+
+	{% if doc.items %}
+		<section class="relative md:py-24 py-16">
+			<div class="container relative">
+				<div class="grid lg:grid-cols-1">
+					<div class="relative overflow-x-auto shadow dark:shadow-gray-800 rounded-md">
+						<table class="w-full text-start">
+							<thead class="text-sm uppercase bg-slate-50 dark:bg-slate-800">
+							<tr>
+								<th scope="col" class="p-4 w-4"></th>
+								<th scope="col"
+									class="text-start p-4 min-w-[220px]">{{ _('Product') }}</th>
+								<th scope="col"
+									class="p-4 w-56 min-w-[220px]">{{ _('Quantity') }}</th>
+								{% if cart_settings.enable_checkout or cart_settings.show_price_in_quotation %}
+									<th scope="col"
+										class=" p-4 w-32 min-w-[130px] text-end">{{ _('Subtotal') }}</th>
+								{% endif %}
+							</tr>
+							</thead>
+							<tbody class="cart-items">
+							{% for d in doc.items %}
+								<tr class="bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-gray-800"
+									data-name="{{ d.name }}">
+									<td class="p-4">
+										{% if not d.is_free_item %}
+											<div class="remove-cart-item"
+												 data-item-code="{{ d.item_code }}"><i
+												class="mdi mdi-window-close text-red-600"></i>
+											</div>
+										{% endif %}
+									</td>
+									<td class="p-4">
+                                        <span class="flex items-center">
+											{% if d.thumbnail %}
+												<img
+													src="{{ frappe.utils.quoted(d.thumbnail) | abs_url }}"
+													class="rounded shadow dark:shadow-gray-800 w-12"
+													alt="">
+											{% else %}
+												<div class="no-image-cart-item">
+												{{ frappe.utils.get_abbr(d.web_item_name) or "NA" }}
+											</div>
+											{% endif %}
+
+											<span class="ms-3 flex flex-col">
+                                                <span
+													class="block font-semibold">{{ d.get("web_item_name") or d.item_name }}</span>
+                                                <span
+													class="block text-slate-400">{{ d.item_code }}</span>
+												{%- set variant_of = frappe.db.get_value('Item', d.item_code, 'variant_of') %}
+												{% if variant_of %}
+													<span
+														class="block text-slate-400">{{ _('Variant of') }} : <a
+														href="{{ frappe.db.get_value('Website Item', {'item_code': variant_of}, 'route') or '#' }}">
+															{{ variant_of }}
+														</a>
+													</span>
+												{% endif %}
+
+                                            </span>
+                                        </span>
+									</td>
+									<td class="p-4 text-center">
+										{% set disabled = 'disabled' if d.is_free_item else '' %}
+										<div class="qty-icons number-spinner">
+											<button data-dir="dwn" {{ disabled }}
+													class="cart-btn size-9 inline-flex items-center justify-center tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white minus">
+												{{ '–' if not d.is_free_item else '' }}
+											</button>
+											<input min="0" name="quantity"
+												   value="{{ d.get_formatted('qty') }}"
+												   data-item-code="{{ d.item_code }}"
+												   type="number" {{ disabled }}
+												   class="cart-qty h-9 inline-flex items-center justify-center tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white pointer-events-none w-16 ps-4 quantity">
+											<button data-dir="up" {{ disabled }}
+													class="cart-btn size-9 inline-flex items-center justify-center tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white plus">
+												{{ '+' if not d.is_free_item else '' }}
+											</button>
+										</div>
+									</td>
+									<td class="p-4 text-end">
+										<div class="flex flex-col">
+											<span>{{ d.get_formatted('amount') }}</span>
+											{% if d.is_free_item %}
+												<span>
+													{{ _('FREE') }}
+												</span>
+											{% else %}
+												<span>{{ _('Rate:') }} {{ d.get_formatted('rate') }}</span>
+											{% endif %}
+										</div>
+									</td>
+								</tr>
+							{% endfor %}
+							</tbody>
+						</table>
+					</div>
+
+					<div class="grid lg:grid-cols-12 md:grid-cols-2 grid-cols-1 mt-6 gap-6">
+						<div class="lg:col-span-8 md:order-1 order-3">
+							<div class="space-x-1">
+								{% if cart_settings.enable_checkout %}
+									<a class="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center bg-orange-500 text-white rounded-md mt-2"
+									   href="/orders">
+										{{ _('Past Orders') }}
+									</a>
+								{% else %}
+									<a class="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center bg-orange-500 text-white rounded-md mt-2"
+									   href="/quotations">
+										{{ _('Past Quotes') }}
+									</a>
+								{% endif %}
+								{% if doc.items %}
+									<a class="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white mt-2"
+									   href="/all-products">
+										{{ _('Continue Shopping') }}
+									</a>
+								{% endif %}
+							</div>
+						</div>
+
+						<div class="lg:col-span-4 md:order-2 order-1">
+							<ul class="list-none shadow dark:shadow-gray-800 rounded-md">
+
+								<!-- Apply Coupon Code  -->
+								{% set show_coupon_code = cart_settings.show_apply_coupon_code_in_website and cart_settings.enable_checkout %}
+								{% if show_coupon_code == 1 %}
+									<div class="p-4">
+										<div class="flex justify-between ">
+											<input type="text"
+												   class="txtcoupon py-2 px-5 w-full border-0 focus:ring-0 outline-none bg-white dark:bg-slate-900 shadow dark:shadow-gray-800"
+												   placeholder="Enter Coupon Code"
+												   name="txtcouponcode"></input>
+											<button
+												class="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white bt-coupon">{{ _("Apply") }}</button>
+											<input type="hidden"
+												   class="txtreferral_sales_partner font-md"
+												   placeholder="Enter Sales Partner"
+												   name="txtreferral_sales_partner"
+												   type="text"></input>
+										</div>
+									</div>
+								{% endif %}
+								{% if cart_settings.enable_checkout or cart_settings.show_price_in_quotation %}
+									{% set total_items = frappe.utils.cstr(frappe.utils.flt(doc.total_qty, 0)) %}
+									<li class="flex justify-between p-4">
+										<span
+											class="font-semibold text-md-left text-slate-400">{{ _("Net Total (") + total_items + _(" Products)") }}</span>
+										<span
+											class="text-slate-400">{{ doc.get_formatted("net_total") }}</span>
+									</li>
+									{% for d in doc.taxes %}
+										{% if d.base_tax_amount %}
+											<li class="flex justify-between p-4">
+												<span
+													class="font-semibold text-lg">{{ d.description }}</span>
+												<span
+													class="text-slate-400">{{ d.get_formatted("base_tax_amount") }}</span>
+											</li>
+										{% endif %}
+									{% endfor %}
+									<li class="flex justify-between p-4">
+										<span
+											class="font-semibold text-lg">{{ _("Grand Total") }}</span>
+										<span
+											class="text-slate-400">{{ doc.get_formatted("grand_total") }}</span>
+									</li>
+								{% endif %}
+
+								<li class="flex justify-between p-4 border-t border-gray-100 dark:border-gray-800">
+									{% if cart_settings.enable_checkout %}
+										<button
+											class="btn-place-order py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center bg-orange-500 text-white rounded-md"
+											type="button">
+											{{ _('Place Order') }}
+										</button>
+									{% else %}
+										<button
+											class="btn-request-for-quotation py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center bg-orange-500 text-white rounded-md"
+											type="button">
+											{{ _('Request for Quote') }}
+										</button>
+									{% endif %}
+									{% if addresses | length == 1 %}
+										{% set select_address = True %}
+									{% endif %}
+									<button class="py-2 px-3 font-semibold tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white btn-new-address"
+									   role="button">{{ _("Add a new address") }}</button>
+								</li>
+								<li class=" p-4 border-t border-gray-100 dark:border-gray-800">
+								{% for address in shipping_addresses %}
+									{% if doc.shipping_address_name == address.name %}
+										<div class="row no-gutters" data-fieldname="shipping_address_name">
+											<div class="w-100 address-container" data-address-name="{{address.name}}" data-address-type="shipping" data-active>
+												<div class="card address-card h-100 flex justify-between">
+													<div class="card-body p-0">
+														<div class="card-title">{{ address.title }}</div>
+														<div class="card-text mb-2">
+															{{ address.display }}
+														</div>
+														<a href="/address/{{address.name}}" class="card-link py-2 px-3 font-semibold tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white">
+															<svg class="icon icon-sm">
+																<use href="#icon-edit"></use>
+															</svg>
+															{{ _('Edit') }}
+														</a>
+													</div>
+													<div class="btn-change-address h-[46px] py-2 px-3 font-semibold tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white">
+														{{ _('Change') }}
+													</div>
+												</div>
+											</div>
+										</div>
+									{% endif %}
+								{% endfor %}
+								</li>
+								<li class="p-4 border-t border-gray-100 dark:border-gray-800">
+								<!-- Billing Address -->
+									<div class="checkbox ml-1 mb-2">
+										<label for="input_same_billing">
+											<input type="checkbox" class="product-filter" id="input_same_billing" checked style="width: 14px !important">
+											<span class="label-area font-md">{{ _('Billing Address is same as Shipping Address') }}</span>
+										</label>
+									</div>
+									<div data-section="billing-address">
+								{% for address in billing_addresses %}
+									{% if doc.customer_address == address.name %}
+									<div class="row no-gutters" data-fieldname="customer_address">
+										<div class="w-100 address-container" data-address-name="{{address.name}}" data-address-type="billing" data-active>
+												<div class="card address-card h-100 flex justify-between">
+													<div class="card-body p-0">
+														<div class="card-title">{{ address.title }}</div>
+														<div class="card-text mb-2">
+															{{ address.display }}
+														</div>
+														<a href="/address/{{address.name}}" class="card-link py-2 px-3 font-semibold tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white">
+															<svg class="icon icon-sm">
+																<use href="#icon-edit"></use>
+															</svg>
+															{{ _('Edit') }}
+														</a>
+													</div>
+													<div class="btn-change-address h-[46px] py-2 px-3 font-semibold tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white">
+														{{ _('Change') }}
+													</div>
+												</div>
+											</div>
+										</div>
+									{% endif %}
+								{% endfor %}</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+
+					<!-- Terms and Conditions -->
+					{% if doc.terms %}
+						<div class="t-and-c-container mt-4 frappe-card">
+							<h5>{{ _("Terms and Conditions") }}</h5>
+							<div class="t-and-c-terms mt-2">
+								{{ doc.terms }}
+							</div>
+						</div>
+					{% endif %}
+				</div>
+			</div><!--end container-->
+		</section>
+	{% else %}
+		<div class="cart-empty frappe-card">
+		<div class="cart-empty-state">
+			<img src="/assets/webshop/images/cart-empty-state.png" alt="Empty State">
+		</div>
+		<div class="cart-empty-message mt-4">{{ _('Your cart is Empty') }}</p>
+			{% if cart_settings.enable_checkout %}
+				<a class="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center bg-orange-500 text-white rounded-md mt-2"
+				   href="/orders" style="font-size: 16px;">
+					{{ _('See past orders') }}
+				</a>
+			{% else %}
+				<a class="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center bg-orange-500 text-white rounded-md mt-2"
+				   href="/quotations" style="font-size: 16px;">
+					{{ _('See past quotations') }}
+				</a>
+			{% endif %}
+		</div>
+	{% endif %}
+
+<script>
+frappe.ready(() => {
+	$(document).on('click', '.address-card', (e) => {
+		const $target = $(e.currentTarget);
+		const $section = $target.closest('[data-section]');
+		$section.find('.address-card').removeClass('active');
+		$target.addClass('active');
+	});
+
+	$('#input_same_billing').change((e) => {
+		const $check = $(e.target);
+		toggle_billing_address_section(!$check.is(':checked'));
+	});
+
+	$('.btn-new-address').click(() => {
+		const d = new frappe.ui.Dialog({
+			title: __('New Address'),
+			fields: [
+				{
+					label: __('Address Title'),
+					fieldname: 'address_title',
+					fieldtype: 'Data',
+					reqd: 1
+				},
+				{
+					label: __('Address Line 1'),
+					fieldname: 'address_line1',
+					fieldtype: 'Data',
+					reqd: 1
+				},
+				{
+					label: __('Address Line 2'),
+					fieldname: 'address_line2',
+					fieldtype: 'Data'
+				},
+				{
+					label: __('City/Town'),
+					fieldname: 'city',
+					fieldtype: 'Data',
+					reqd: 1
+				},
+				{
+					label: __('State'),
+					fieldname: 'state',
+					fieldtype: 'Data'
+				},
+				{
+					label: __('Country'),
+					fieldname: 'country',
+					fieldtype: 'Link',
+					options: 'Country',
+					only_select: true,
+					reqd: 1,
+					default: 'Bangladesh'
+				},
+				{
+					fieldname: "column_break0",
+					fieldtype: "Column Break",
+					width: "50%"
+				},
+				{
+					label: __('Address Type'),
+					fieldname: 'address_type',
+					fieldtype: 'Select',
+					options: [
+						'Billing',
+						'Shipping'
+					],
+					reqd: 1
+				},
+				{
+					label: __('Postal Code'),
+					fieldname: 'pincode',
+					fieldtype: 'Data'
+				},
+				{
+					fieldname: "phone",
+					fieldtype: "Data",
+					label: "Phone",
+					reqd: 1
+				},
+			],
+			primary_action_label: __('Save'),
+			primary_action: (values) => {
+				frappe.call('webshop.webshop.shopping_cart.cart.add_new_address', { doc: values })
+					.then(r => {
+						frappe.call({
+							method: "webshop.webshop.shopping_cart.cart.update_cart_address",
+							args: {
+								address_type: r.message.address_type,
+								address_name: r.message.name
+							},
+							callback: function (r) {
+								d.hide();
+								window.location.reload();
+							}
+						});
+					});
+
+			}
+		})
+
+		d.show();
+	});
+
+	function setup_state() {
+		const shipping_address = $('[data-section="shipping-address"]')
+			.find('[data-address-name][data-active]').attr('data-address-name');
+
+		const billing_address = $('[data-section="billing-address"]')
+			.find('[data-address-name][data-active]').attr('data-address-name');
+
+		$('#input_same_billing').prop('checked', shipping_address === billing_address).trigger('change');
+
+		if (!shipping_address && !billing_address) {
+			$('#input_same_billing').prop('checked', true).trigger('change');
+		}
+
+		if (shipping_address) {
+			$(`[data-section="shipping-address"] [data-address-name="${shipping_address}"] .address-card`).addClass('active');
+		}
+		if (billing_address) {
+			$(`[data-section="billing-address"] [data-address-name="${billing_address}"] .address-card`).addClass('active');
+		}
+	}
+
+	setup_state();
+
+	function toggle_billing_address_section(flag) {
+		$('[data-section="billing-address"]').toggle(flag);
+	}
+});
+</script>
+
+<script>
+	frappe.ready(() => {
+		function get_update_address_dialog() {
+			let d = new frappe.ui.Dialog({
+				title: "Select Address",
+				fields: [{
+					'fieldtype': 'HTML',
+					'fieldname': 'address_picker',
+				}],
+				primary_action_label: __('Set Address'),
+				primary_action: () => {
+					const $card = d.$wrapper.find('.address-card.active');
+					const address_type = $card.closest('[data-address-type]').attr('data-address-type');
+					const address_name = $card.closest('[data-address-name]').attr('data-address-name');
+					frappe.call({
+						type: "POST",
+						method: "webshop.webshop.shopping_cart.cart.update_cart_address",
+						freeze: true,
+						args: {
+							address_type,
+							address_name
+						},
+						callback: function(r) {
+							d.hide();
+							if (!r.exc) {
+								window.location.reload();
+							}
+						}
+					});
+				}
+			});
+
+			return d;
+		}
+
+		function get_address_template(type) {
+			return {
+				shipping: `<div class="mb-3" data-section="shipping-address">
+					<div class="row no-gutters" data-fieldname="shipping_address_name">
+						{% for address in shipping_addresses %}
+							<div class="mr-3 mb-3 w-100" data-address-name="{{address.name}}" data-address-type="shipping"
+								{% if doc.shipping_address_name == address.name %} data-active {% endif %}>
+								{% include "templates/includes/cart/address_picker_card.html" %}
+							</div>
+						{% endfor %}
+					</div>
+				</div>`,
+				billing: `<div class="mb-3" data-section="billing-address">
+					<div class="row no-gutters" data-fieldname="customer_address">
+						{% for address in billing_addresses %}
+							<div class="mr-3 mb-3 w-100" data-address-name="{{address.name}}" data-address-type="billing"
+								{% if doc.shipping_address_name == address.name %} data-active {% endif %}>
+								{% include "templates/includes/cart/address_picker_card.html" %}
+							</div>
+						{% endfor %}
+					</div>
+				</div>`,
+			}[type];
+		}
+
+		$(document).on('click', '.btn-change-address', (e) => {
+			const d = get_update_address_dialog();
+			const type = $(e.currentTarget).parents('.address-container').attr('data-address-type');
+
+			$(d.get_field('address_picker').wrapper).html(
+				get_address_template(type)
+			);
+
+			d.show();
+		});
+	});
+</script>
+
+{% endblock %}
+
+{% block base_scripts %}
+<!-- js should be loaded in body! -->
+{{ include_script("frappe-web.bundle.js") }}
+{{ include_script("controls.bundle.js") }}
+{{ include_script("dialog.bundle.js") }}
+{% endblock %}

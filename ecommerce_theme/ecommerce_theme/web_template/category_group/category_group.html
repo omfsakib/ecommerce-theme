@@ -1,0 +1,29 @@
+{%- macro card(title, image, url, text_primary=False) -%}
+	<a href="{{ url or '#' }}" class="text-center hover:text-orange-500">
+		<img src="{{ image }}"
+			 class="rounded-full shadow dark:shadow-gray-800" alt="{{ title }}">
+		<span class="text-xl font-medium mt-3 block">{{ title }}</span>
+	</a>
+{%- endmacro -%}
+
+<div class="container relative">
+	<div class="grid grid-cols-1 justify-center text-center mb-6">
+		{%- if title -%}
+			<h5 class="font-semibold text-3xl leading-normal mb-4">{{ values.title }}</h5>
+		{%- endif -%}
+		{%- if subtitle -%}
+			<p class="text-slate-400 max-w-xl mx-auto">{{ values.subtitle }}</p>
+		{%- endif -%}
+	</div><!--end grid-->
+
+	<div class="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 pt-6 gap-6">
+
+		{%- for index in ['1', '2', '3', '4', '5'] -%}
+			{%- set category = values['category_' + index] -%}
+			{%- if category -%}
+				{%- set category = frappe.get_doc("Item Group", category) -%}
+				{{ card(category.name, category.image, category.route) }}
+			{%- endif -%}
+		{% endfor %}
+	</div><!--end grid-->
+</div><!--end container-->

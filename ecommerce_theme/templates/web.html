@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" class="light scroll-smooth" dir="ltr">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="generator" content="frappe">
+
+	{% block meta_block %}
+		{% include "templates/includes/meta_block.html" %}
+	{% endblock %}
+
+	<title>{% block title %}{{ title | striptags }}{% endblock %}</title>
+
+	<!-- favicon -->
+	{% block favicon %}
+		<link
+			rel="shortcut icon"
+			href="{{ (favicon or "/assets/frappe/images/frappe-favicon.svg") | abs_url }}"
+			type="image/x-icon"
+		>
+	{% endblock %}
+	{%- block head -%}
+		{% include "templates/includes/head.html" %}
+	{%- endblock -%}
+
+	{%- block head_include %}
+		{{ head_include or "" }}
+	{% endblock -%}
+
+	{%- block style %}
+		{% if colocated_css -%}
+			<style>{{ colocated_css }}</style>
+		{%- endif %}
+	{%- endblock -%}
+
+	<script>
+		window.frappe = {};
+		window._version_number = "{{ build_version }}";
+		frappe.ready_events = [];
+		frappe.ready = function (fn) {
+			frappe.ready_events.push(fn);
+		}
+		window.dev_server = {{ dev_server }};
+		window.socketio_port = {{ (frappe.socketio_port or 9000) }};
+		window.show_language_picker = {{ show_language_picker or 'false' }};
+	</script>
+
+	<!-- Css -->
+	<link href="assets/ecommerce_theme/libs/tobii/css/tobii.min.css" rel="stylesheet">
+	<!-- Main Css -->
+	<link href="assets/ecommerce_theme/libs/@mdi/font/css/materialdesignicons.min.css"
+		  rel="stylesheet"
+		  type="text/css">
+	<link href="assets/ecommerce_theme/css/tailwind.min.css" rel="stylesheet" type="text/css">
+
+</head>
+<body frappe-session-status="{{ 'logged-in' if frappe.session.user != 'Guest' else 'logged-out' }}"
+	  data-path="{{ path | e }}" {%- if template and template.endswith('.md') %}
+	  frappe-content-type="markdown" {%- endif %} class="dark:bg-slate-900 {{ body_class or '' }}">
+
+
+{%- block banner -%}
+	{% include "templates/includes/banner_extension.html" ignore missing %}
+
+	{% if banner_html -%}
+		{{ banner_html or "" }}
+	{%- endif %}
+{%- endblock -%}
+
+{%- block navbar -%}
+	{{ web_block( navbar_template or 'Standard Navbar', values=_context_dict, add_container=0, add_top_padding=0, add_bottom_padding=0,
+		) }}
+{%- endblock -%}
+
+{% block hero %}{% endblock %}
+
+{% block content %}
+
+	{% macro main_content() %}
+		{% block breadcrumbs %}
+			{%- if not no_breadcrumbs and parents -%}
+				<!-- Start Hero -->
+				<section
+					class="relative table w-full py-20 lg:py-24 md:pt-28 bg-gray-50 dark:bg-slate-800">
+					<div class="container relative">
+						<div class="grid grid-cols-1 mt-14">
+							<h3 class="text-3xl leading-normal font-semibold">{{ _(title) }}</h3>
+						</div><!--end grid-->
+
+						<div class="relative mt-3">
+							<ul class="tracking-[0.5px] mb-0 inline-block" itemscope
+								itemtype="http://schema.org/BreadcrumbList">
+								{%- set parents = parents[-3:] %}
+								{% set count = (parents | length) + 1 %}
+								{% for parent in parents %}
+									<li itemprop="itemListElement" itemscope
+										itemtype="http://schema.org/ListItem"
+										itemprop="item"
+										class="inline-block uppercase text-[13px] font-bold duration-500 ease-in-out hover:text-orange-500">
+										<a href="{{ url_prefix }}{{ parent.route | abs_url }}">
+                                    <span
+										itemprop="name">{{ parent.title or parent.label or parent.name or "" }}</span>
+											<meta itemprop="position" content="{{ loop.index }}"/>
+										</a></li>
+								{% endfor %}
+								<li class="inline-block text-base text-slate-950 dark:text-white mx-0.5 ltr:rotate-0 rtl:rotate-180">
+									<i
+										class="mdi mdi-chevron-right"></i></li>
+								<li itemprop="itemListElement" itemscope
+									itemtype="http://schema.org/ListItem"
+									class="inline-block uppercase text-[13px] font-bold text-orange-500"
+									aria-current="page">
+                            <span itemprop="item">
+					<span itemprop="name">{{ _(title) }}</span>
+					<meta itemprop="position" content="{{ count }}"/>
+				</span>
+								</li>
+							</ul>
+						</div>
+					</div><!--end container-->
+				</section><!--end section-->
+				<!-- End Hero -->
+			{% endif %}
+		{% endblock %}
+		{% block page_container %}
+			<main>
+				{%- block page_content -%}{%- endblock -%}
+			</main>
+		{% endblock %}
+	{% endmacro %}
+
+	{% macro container_attributes() -%}
+		id="page-{{ name or route | e }}" data-path="{{ pathname | e }}"
+		{%- if page_or_generator=="Generator" %}source-type="Generator" data-doctype="{{ doctype }}
+			"{%- endif %}
+		{%- if source_content_type %}source-content-type="{{ source_content_type }}"{%- endif %}
+	{%- endmacro %}
+
+	<div {{ container_attributes() }}>
+		{{ main_content() }}
+	</div>
+{% endblock %}
+
+{%- block footer -%}
+	{{ web_block(
+			footer_template or 'Standard Footer',
+			values=_context_dict,
+			add_container=0,
+			add_top_padding=0,
+			add_bottom_padding=0
+		) }}
+{%- endblock -%}
+<div class="fixed top-1/4 -left-2 z-50">
+		<span class="relative inline-block rotate-90">
+			<input type="checkbox" class="checkbox opacity-0 absolute" id="chk">
+			<label
+				class="label bg-slate-900 dark:bg-white shadow dark:shadow-gray-800 cursor-pointer rounded-full flex justify-between items-center p-1 w-14 h-8"
+				for="chk">
+				<i data-feather="moon" class="w-[18px] h-[18px] text-yellow-500"></i>
+				<i data-feather="sun" class="w-[18px] h-[18px] text-yellow-500"></i>
+				<span
+					class="ball bg-white dark:bg-slate-900 rounded-full absolute top-[2px] left-[2px] w-7 h-7"></span>
+			</label>
+		</span>
+</div>
+
+<!-- Back to top -->
+<a href="#" onclick="topFunction()" id="back-to-top"
+   class="back-to-top fixed hidden text-lg rounded-full z-10 bottom-5 end-5 size-9 text-center bg-orange-500 text-white justify-center items-center"><i
+	class="mdi mdi-arrow-up"></i></a>
+<!-- Back to top -->
+
+<!-- JAVASCRIPTS -->
+
+<div id="all-symbols" style="display:none"></div>
+{%- for path in web_include_icons -%}
+	{{ include_icons(path) }}
+{%- endfor -%}
+
+{% block base_scripts %}
+	<!-- js should be loaded in body! -->
+	<script>
+		frappe.boot = {{ boot }}
+		// for backward compatibility of some libs
+		frappe.sys_defaults = frappe.boot.sysdefaults;
+	</script>
+	{{ include_script('frappe-web.bundle.js') }}
+{% endblock %}
+
+
+{%- for link in web_include_js %}
+	{{ include_script(link) }}
+{%- endfor -%}
+{%- block script %}
+	{% if colocated_js -%}
+		<script>{{ colocated_js }}</script>
+	{%- endif %}
+{%- endblock %}
+<!-- csrf_token -->
+{%- block body_include %}{{ body_include or "" }}{% endblock -%}
+<script src="assets/ecommerce_theme/libs/tobii/js/tobii.min.js"></script>
+<script src="assets/ecommerce_theme/libs/feather-icons/feather.min.js"></script>
+<script src="assets/ecommerce_theme/js/plugins.init.js"></script>
+<script src="assets/ecommerce_theme/js/app.js"></script>
+<!-- JAVASCRIPTS -->
+</body>
+</html>

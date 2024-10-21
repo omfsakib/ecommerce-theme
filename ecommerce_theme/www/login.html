@@ -1,0 +1,338 @@
+{% extends 'templates/web.html' %}
+
+{% set settings = frappe.get_doc("Website Settings", "Website Settings") %}
+{% set navbar_template_values = json.loads(settings.navbar_template_values) %}
+
+{% macro email_login_body() -%}
+	{% if not disable_user_pass_login or (ldap_settings and ldap_settings.enabled) %}
+		<div class="grid grid-cols-1">
+			<div class="mb-4">
+				<label class="font-semibold"
+					   for="login_email">{{ login_label or _("Email") }}</label>
+				<input id="login_email" type="text"
+					   class="mt-3 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-100 dark:border-gray-800 focus:ring-0"
+					   placeholder="{% if login_name_placeholder %}{{ login_name_placeholder }}{% else %}{{ _('jane@example.com') }}{% endif %}"
+					   required autofocus autocomplete="username">
+			</div>
+
+			<div class="mb-4">
+				<label class="font-semibold"
+					   for="login_password">{{ _("Password") }}</label>
+				<input id="login_password" type="password"
+					   class="mt-3 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-100 dark:border-gray-800 focus:ring-0"
+					   placeholder="•••••"
+					   autocomplete="current-password" required>
+			</div>
+
+			<div class="flex justify-between mb-4">
+				<div class="flex items-center mb-0">
+					<input
+						class="toggle-password form-checkbox rounded border-gray-100 dark:border-gray-800 text-orange-500 focus:border-orange-300 focus:ring focus:ring-offset-0 focus:ring-orange-200 focus:ring-opacity-50 me-2"
+						type="checkbox" toggle="#login_password" id="show_password">
+					<label class="form-checkbox-label text-slate-400"
+						   for="show_password">{{ _('Show Password') }}</label>
+				</div>
+				<p class="text-slate-400 mb-0"><a
+					href="#forgot"
+					class="text-slate-400 forgot-password-message">{{ _("Forgot Password?") }}</a>
+				</p>
+			</div>
+
+			<div class="mb-4">
+
+				{% if not disable_user_pass_login %}
+					<button type="submit"
+							class="btn-login py-2 px-5 inline-block tracking-wide align-middle duration-500 text-base text-center bg-orange-500 text-white rounded-md w-full"
+					> {{ _("Login") }}</button>
+				{% endif %}
+				{% if ldap_settings and ldap_settings.enabled %}
+					<button
+						class="btn-login py-2 px-5 inline-block tracking-wide align-middle duration-500 text-base text-center bg-orange-500 text-white rounded-md w-full btn-ldap-login">
+						{{ _("Login with LDAP") }}</button>
+				{% endif %}
+			</div>
+			{%- if not disable_signup and not disable_user_pass_login -%}
+
+				<div class="text-center">
+					<span class="text-slate-400 me-2">{{ _("Don't have an account?") }}</span>
+					<a href="#signup"
+					   class="text-black dark:text-white font-bold inline-block">{{ _("Sign up") }}</a>
+				</div>
+			{%- endif -%}
+		</div>
+	{% endif %}
+{% endmacro %}
+
+
+{% macro logo_section(title=null) %}
+	<div class="text-center">
+		<a href="{{ url_prefix }}{{ home_page or "/" }}">
+			<img src="{{ navbar_template_values['logo_dark'] }}"
+				 class="mx-auto block dark:hidden" alt="">
+			<img src="{{ navbar_template_values['logo_light'] }}"
+				 class="mx-auto hidden dark:block" alt="">
+		</a>
+	</div>
+{% endmacro %}
+
+{%- block navbar -%}{%- endblock -%}
+{%- block footer -%}{%- endblock -%}
+
+{% block page_content %}
+	<noscript>
+		<div class="text-center my-5">
+			<h4>{{ _("Javascript is disabled on your browser") }}</h4>
+			<p class="text-muted">
+				{{ _("You need to enable JavaScript for your app to work.") }}<br>{{ _("To enable it follow the instructions in the following link: {0}").format("<a href='https://enable-javascript.com/'>enable-javascript.com</a></p>") }}
+		</div>
+	</noscript>
+	<section
+		class="md:h-screen py-36 flex items-center bg-orange-500/10 dark:bg-orange-500/20 bg-center bg-no-repeat bg-cover"
+		style="background-image: url('/assets/ecommerce_theme/images/hero/bg-shape.png')">
+		<section class="for-login container relative">
+			<div class="grid grid-cols-1">
+				<div
+					class="relative overflow-hidden rounded-md shadow dark:shadow-gray-700 bg-white dark:bg-slate-900">
+					<div class="grid md:grid-cols-2 grid-cols-1 items-center">
+						<div class="relative md:shrink-0">
+							<img class="lg:h-full h-full w-full object-cover md:h-[34rem]"
+								 src="/assets/ecommerce_theme/images/login.jpg" alt="">
+						</div>
+							<div class="p-8 lg:px-20">
+								{{ logo_section() }}
+								{%- if social_login or login_with_email_link -%}
+									<form
+										class="text-start py-8 form-signin form-login mt-2">
+										{{ email_login_body() }}
+									</form>
+									<div class="social-logins text-center">
+										{% if not disable_user_pass_login or (ldap_settings and ldap_settings.enabled) %}
+											<p class="text-slate-400 me-2">{{ _("or") }}</p>
+										{% endif %}
+										<div class="social-login-buttons flex">
+											{% for provider in provider_logins %}
+												<div class="login-button-wrapper">
+													<a href="{{ provider.auth_url }}"
+													   class="py-2 px-5 inline-block tracking-wide align-middle duration-500 text-base text-center bg-orange-500 text-white rounded-md btn-{{ provider.name }}">
+														{% if provider.icon %}
+															{{ provider.icon }}
+														{% endif %}
+														{{ _("Login with {0}").format(provider.provider_name) }}</a>
+												</div>
+											{% endfor %}
+										</div>
+										{% if login_with_email_link %}
+											<div
+												class="login-with-email-link social-login-buttons">
+												<div class="login-button-wrapper">
+													<a href="#login-with-email-link"
+													   class="py-2 px-5 inline-block tracking-wide align-middle duration-500 text-base text-center bg-orange-500 text-white rounded-md btn-login-with-email-link">
+														{{ _("Login with Email Link") }}</a>
+												</div>
+											</div>
+										{% endif %}
+									</div>
+								{% else %}
+									{{ email_login_body() }}
+								{%- endif -%}
+								{%- if social_login -%}
+									<form class="form-signin form-login" role="form">
+										{{ email_login_body() }}
+									</form>
+								{%- endif -%}
+								<div class="text-center">
+									<p class="mb-0 text-slate-400">
+										{% if copyright %}
+											&copy; {{ copyright }}
+										{% endif %}
+									</p>
+								</div>
+							</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="for-forgot container relative">
+			<div class="grid grid-cols-1">
+				<div
+					class="relative overflow-hidden rounded-md shadow dark:shadow-gray-700 bg-white dark:bg-slate-900">
+					<div class="grid md:grid-cols-2 grid-cols-1 items-center">
+						<div class="relative md:shrink-0">
+							<img class="lg:h-full h-full w-full object-cover md:h-[34rem]"
+								 src="assets/ecommerce_theme/images/forgot-password.jpg" alt="">
+						</div>
+
+						<div class="p-8 lg:px-20">
+							{{ logo_section() }}
+
+							<form class="text-start py-8">
+								<p class="text-slate-400 mb-6">{{ _("Please enter your email address. You
+									will receive a link to create a new password via email.") }}</p>
+								<div class="grid grid-cols-1">
+									<div class="mb-4">
+										<label class="font-semibold"
+											   for="forgot_email">{{ _('Email Address') }}</label>
+										<input id="forgot_email" type="text"
+											   class="mt-3 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-100 dark:border-gray-800 focus:ring-0"
+											   placeholder="{{ _('Email Address') }}" required
+											   autofocus
+											   autocomplete="username">
+									</div>
+
+									<div class="mb-4">
+										<button type="submit"
+												class="py-2 px-5 inline-block tracking-wide align-middle duration-500 text-base text-center bg-orange-500 text-white rounded-md w-full">
+											{{ _("Reset Password") }}
+										</button>
+									</div>
+
+									<div class="text-center">
+										<span
+											class="text-slate-400 me-2">{{ _("Remember your password ?") }} </span><a
+										href="#login"
+										class="text-black dark:text-white font-bold inline-block">{{ _("Sign in") }}</a>
+									</div>
+								</div>
+							</form>
+
+							<div class="text-center">
+								<p class="mb-0 text-slate-400">
+									{% if copyright %}
+										&copy; {{ copyright }}
+									{% endif %}
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section
+			class="for-signup {{ "signup-disabled" if disable_signup else "" }} container relative">
+			<div class="grid grid-cols-1">
+				<div
+					class="relative overflow-hidden rounded-md shadow dark:shadow-gray-700 bg-white dark:bg-slate-900">
+					<div class="grid md:grid-cols-2 grid-cols-1 items-center">
+						<div class="relative md:shrink-0">
+							<img class="h-full w-full object-cover md:h-[44rem]"
+								 src="assets/ecommerce_theme/images/signup.jpg" alt="">
+						</div>
+
+						<div class="p-8 lg:px-20">
+							<div class="text-center">
+								{{ logo_section() }}
+							</div>
+
+							<form class="text-start lg:py-20 py-8">
+								<div class="grid grid-cols-1">
+									<div class="mb-4">
+										<label class="font-semibold"
+											   for="signup_fullname">{{ _("Full Name") }}</label>
+										<input placeholder="{{ _('Jane Doe') }}"
+											   required autofocus autocomplete="name"
+											   id="signup_fullname" type="text"
+											   class="mt-3 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-100 dark:border-gray-800 focus:ring-0">
+									</div>
+
+									<div class="mb-4">
+										<label class="font-semibold"
+											   for="signup_email">{{ _("Email Address:") }}</label>
+										<input id="signup_email" type="text"
+											   class="mt-3 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-100 dark:border-gray-800 focus:ring-0"
+											   placeholder="{{ _('jane@example.com') }}" required
+											   autocomplete="username">
+									</div>
+
+									<div class="mb-4">
+										<button type="submit"
+												class="py-2 px-5 inline-block tracking-wide align-middle duration-500 text-base text-center bg-orange-500 text-white rounded-md w-full"
+										>{{ _("Sign up") }}</button>
+									</div>
+
+									<div class="text-center">
+										<span
+											class="text-slate-400 me-2">{{ _("Already have an account ?") }} </span>
+										<a href="#login"
+										   class="text-black dark:text-white font-bold inline-block">{{ _("Sign in") }}</a>
+									</div>
+								</div>
+							</form>
+
+							<div class="text-center">
+								<p class="mb-0 text-slate-400">
+									{% if copyright %}
+										&copy; {{ copyright }}
+									{% endif %}
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="for-login-with-email-link container relative">
+			<div class="grid grid-cols-1">
+				<div
+					class="relative overflow-hidden rounded-md shadow dark:shadow-gray-700 bg-white dark:bg-slate-900">
+					<div class="grid md:grid-cols-2 grid-cols-1 items-center">
+						<div class="relative md:shrink-0">
+							<img class="lg:h-full h-full w-full object-cover md:h-[34rem]"
+								 src="assets/ecommerce_theme/images/forgot-password.jpg" alt="">
+						</div>
+
+						<div class="p-8 lg:px-20">
+							{{ logo_section() }}
+
+							<form class="text-start lg:py-20 py-8">
+								<div class="grid grid-cols-1">
+									<div class="mb-4">
+										<label class="font-semibold"
+											   for="login_with_email_link_email">{{ _('Email Address') }}</label>
+										<input id="login_with_email_link_email" type="text"
+											   class="mt-3 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-100 dark:border-gray-800 focus:ring-0"
+											   placeholder="{{ _('Email Address') }}" required
+											   autofocus
+											   autocomplete="username">
+									</div>
+
+									<div class="mb-4">
+										<button type="submit"
+												class="py-2 px-5 inline-block tracking-wide align-middle duration-500 text-base text-center bg-orange-500 text-white rounded-md w-full">
+											{{ _("Send login link") }}
+										</button>
+									</div>
+
+									<div class="text-center">
+										<span
+											class="text-slate-400 me-2">{{ _("Remember your password ?") }} </span><a
+										href="#login"
+										class="text-black dark:text-white font-bold inline-block">{{ _("Sign in") }}</a>
+									</div>
+								</div>
+							</form>
+
+							<div class="text-center">
+								<p class="mb-0 text-slate-400">
+									{% if copyright %}
+										&copy; {{ copyright }}
+									{% endif %}
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+	</section><!--end section -->
+
+	<div class="fixed bottom-3 end-3">
+		<a href="{{ url_prefix }}{{ home_page or "/" }}"
+		   class="back-button size-9 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-base text-center bg-orange-500 text-white rounded-full"><i
+			data-feather="arrow-left" class="h-4 w-4"></i></a>
+	</div>
+{% endblock %}
+
+{% block script %}
+	<script>{% include "templates/includes/login/login.js" %}</script>
+{% endblock %}

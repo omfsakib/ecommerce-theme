@@ -1,0 +1,81 @@
+{
+ "__unsaved": 1,
+ "creation": "2024-10-16 12:31:30.300229",
+ "docstatus": 0,
+ "doctype": "Web Template",
+ "fields": [
+  {
+   "__unsaved": 1,
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title",
+   "reqd": 1
+  },
+  {
+   "__unsaved": 1,
+   "fieldname": "subtitle",
+   "fieldtype": "Data",
+   "label": "Subtitle",
+   "reqd": 0
+  },
+  {
+   "__unsaved": 1,
+   "fieldname": "redirect_button_name",
+   "fieldtype": "Data",
+   "label": "Redirect Button Name",
+   "reqd": 0
+  },
+  {
+   "__unsaved": 1,
+   "fieldname": "redirect_url",
+   "fieldtype": "Data",
+   "label": "Redirect url",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "item_1",
+   "fieldtype": "Link",
+   "label": "Website Item",
+   "options": "Website Item",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "item_2",
+   "fieldtype": "Link",
+   "label": "Website Item",
+   "options": "Website Item",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "item_3",
+   "fieldtype": "Link",
+   "label": "Website Item",
+   "options": "Website Item",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "item_4",
+   "fieldtype": "Link",
+   "label": "Website Item",
+   "options": "Website Item",
+   "reqd": 0
+  }
+ ],
+ "idx": 0,
+ "modified": "2024-10-16 12:34:01.546347",
+ "modified_by": "Administrator",
+ "module": "Ecommerce Theme",
+ "name": "Product Card with Redirect Action",
+ "owner": "Administrator",
+ "standard": 1,
+ "template": "",
+ "type": "Section"
+}

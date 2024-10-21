@@ -1,0 +1,197 @@
+{% set settings = frappe.get_doc("Website Settings", "Website Settings") %}
+{% set footer_template_values = json.loads(settings.footer_template_values or '{}') %}
+
+{% if footer_template_values %}
+	<!-- Footer Start -->
+	<footer class="footer bg-dark-footer relative text-gray-200 dark:text-gray-200">
+		<div class="container relative">
+			<div class="grid grid-cols-12">
+				<div class="col-span-12">
+					<div class="py-[60px] px-0">
+						<div class="grid md:grid-cols-12 grid-cols-1 gap-6">
+							<div class="lg:col-span-3 md:col-span-12">
+								<a href="#" class="text-[22px] focus:outline-none">
+									<img src="{{ footer_logo }}" alt="">
+								</a>
+								<p class="mt-6 text-gray-300">{{ footer_address }}</p>
+								<ul class="list-none mt-6">
+									{% if footer_template_values.drribbble %}
+										<li class="inline"><a
+											href="{{ footer_template_values.drribbble }}"
+											target="_blank"
+											class="size-8 inline-flex items-center justify-center tracking-wide align-middle text-base border border-gray-800 dark:border-slate-800 rounded-md hover:text-orange-500 dark:hover:text-orange-500 text-slate-300"><i
+											data-feather="dribbble" class="h-4 w-4 align-middle"
+											title="dribbble"></i></a></li>
+									{% endif %}
+									{% if footer_template_values.linkedin %}
+										<li class="inline"><a
+											href="{{ footer_template_values.linkedin }}"
+											target="_blank"
+											class="size-8 inline-flex items-center justify-center tracking-wide align-middle text-base border border-gray-800 dark:border-slate-800 rounded-md hover:text-orange-500 dark:hover:text-orange-500 text-slate-300"><i
+											data-feather="linkedin" class="h-4 w-4 align-middle"
+											title="Linkedin"></i></a></li>
+									{% endif %}
+									{% if footer_template_values.facebook %}
+										<li class="inline"><a
+											href="{{ footer_template_values.facebook }}"
+											target="_blank"
+											class="size-8 inline-flex items-center justify-center tracking-wide align-middle text-base border border-gray-800 dark:border-slate-800 rounded-md hover:text-orange-500 dark:hover:text-orange-500 text-slate-300"><i
+											data-feather="facebook" class="h-4 w-4 align-middle"
+											title="facebook"></i></a></li>
+									{% endif %}
+									{% if footer_template_values.instagram %}
+										<li class="inline"><a
+											href="{{ footer_template_values.instagram }}"
+											target="_blank"
+											class="size-8 inline-flex items-center justify-center tracking-wide align-middle text-base border border-gray-800 dark:border-slate-800 rounded-md hover:text-orange-500 dark:hover:text-orange-500 text-slate-300"><i
+											data-feather="instagram" class="h-4 w-4 align-middle"
+											title="instagram"></i></a></li>
+									{% endif %}
+									{% if footer_template_values.x %}
+										<li class="inline"><a href="{{ footer_template_values.x }}"
+															  target="_blank"
+															  class="size-8 inline-flex items-center justify-center tracking-wide align-middle text-base border border-gray-800 dark:border-slate-800 rounded-md hover:text-orange-500 dark:hover:text-orange-500 text-slate-300"><i
+											data-feather="twitter" class="h-4 w-4 align-middle"
+											title="twitter"></i></a></li>
+									{% endif %}
+									{% if footer_template_values.email %}
+										<li class="inline"><a
+											href="mailto:{{ footer_template_values.email }}"
+											class="size-8 inline-flex items-center justify-center tracking-wide align-middle text-base border border-gray-800 dark:border-slate-800 rounded-md hover:text-orange-500 dark:hover:text-orange-500 text-slate-300"><i
+											data-feather="mail" class="h-4 w-4 align-middle"
+											title="email"></i></a></li>
+									{% endif %}
+								</ul><!--end icon-->
+							</div><!--end col-->
+
+							<div class="lg:col-span-6 md:col-span-12">
+								<h5 class="tracking-[1px] text-gray-100 font-semibold">{{ footer_template_values.footer_menu_title }}</h5>
+
+								{% set footer_columns = [[], [], []] %}
+
+								{# Distribute footer items into three columns #}
+								{% for index, item in enumerate(footer_items) %}
+									{% set column = index % 3 %}
+									{% set _ = footer_columns[column].append(item) %}
+								{% endfor %}
+
+								<div class="grid md:grid-cols-12 grid-cols-1">
+									{# Iterate through the three columns #}
+									{% for column in footer_columns %}
+										<div class="md:col-span-4">
+											<ul class="list-none footer-list mt-6">
+												{# Iterate through each item in the column #}
+												{% for item in column %}
+													<li class="mt-[10px]">
+														<a href="{{ item.url | abs_url }}"
+															{% if item.open_in_new_tab %}
+														   target="_blank" {% endif %}
+														   rel="noreferrer"
+														   class="text-gray-300 hover:text-gray-400 duration-500 ease-in-out">
+															<i class="mdi mdi-chevron-right"></i> {{ item.label }}
+														</a>
+													</li>
+												{% endfor %}
+											</ul>
+										</div><!--end col-->
+									{% endfor %}
+								</div><!--end grid-->
+							</div>
+							{% if not hide_footer_signup %}
+								<div class="lg:col-span-3 md:col-span-4">
+									<h5 class="tracking-[1px] text-gray-100 font-semibold">
+										Newsletter</h5>
+									<p class="mt-6">Sign up and receive the latest updates via
+										email.</p>
+									<div class="grid grid-cols-1">
+										<div class="my-3">
+											<label class="form-label">Write your email <span
+												class="text-red-600">*</span></label>
+											<div class="form-icon relative mt-2">
+												<i data-feather="mail"
+												   class="size-4 absolute top-3 start-4"></i>
+												<input type="text" id="footer-subscribe-email"
+													   class="ps-12 rounded w-full py-2 px-3 h-10 bg-gray-800 border-0 text-gray-100 focus:shadow-none focus:ring-0 placeholder:text-gray-200 outline-none"
+													   placeholder="{{ _('Your email address...') }}"
+													   aria-label="{{ _('Your email address...') }}"
+													   aria-describedby="footer-subscribe-button">
+											</div>
+										</div>
+
+										<button type="button" id="footer-subscribe-button"
+												class="py-2 px-5 inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-orange-500 text-white rounded-md">
+											{{ _("Subscribe") }}
+										</button>
+									</div>
+								</div><!--end col-->
+								<script>
+									frappe.ready(function () {
+										$("#footer-subscribe-button").click(function () {
+
+											if ($("#footer-subscribe-email").val() && validate_email($("#footer-subscribe-email").val())) {
+												$("#footer-subscribe-email").attr('disabled', true);
+												$("#footer-subscribe-button").html("Sending...")
+													.attr("disabled", true);
+												erpnext.subscribe_to_newsletter({
+													email: $("#footer-subscribe-email").val(),
+													callback: function (r) {
+														if (!r.exc) {
+															$("#footer-subscribe-button").html(__("Added"))
+																.attr("disabled", true);
+														} else {
+															$("#footer-subscribe-button").html(__("Error: Not a valid id?"))
+																.addClass("btn-danger").attr("disabled", false);
+															$("#footer-subscribe-email").val("").attr('disabled', false);
+														}
+													}
+												});
+											} else
+												$("#footer-subscribe-button").html(__("Please enter valid email address"))
+										});
+									});
+								</script>
+							{% endif %}
+						</div><!--end grid-->
+					</div><!--end col-->
+				</div>
+			</div><!--end grid-->
+		</div><!--end container-->
+
+		<div class="py-[30px] px-0 border-t border-slate-800">
+			<div class="container relative text-center">
+				<div class="grid md:grid-cols-2 items-center">
+					<div class="md:text-start text-center">
+						<p class="mb-0">
+							{% if copyright %}
+								&copy; {{ copyright }}
+							{% endif %}
+						</p>
+					</div>
+
+					<ul class="list-none md:text-end text-center mt-6 md:mt-0">
+						<li class="inline"><a href=""><img
+							src="assets/images/payments/american-express.jpg"
+							class="max-h-6 rounded inline" title="American Express" alt=""></a>
+						</li>
+						<li class="inline"><a href=""><img
+							src="assets/images/payments/discover.jpg"
+							class="max-h-6 rounded inline"
+							title="Discover" alt=""></a></li>
+						<li class="inline"><a href=""><img
+							src="assets/images/payments/mastercard.jpg"
+							class="max-h-6 rounded inline"
+							title="Master Card" alt=""></a></li>
+						<li class="inline"><a href=""><img src="assets/images/payments/paypal.jpg"
+														   class="max-h-6 rounded inline"
+														   title="Paypal" alt=""></a></li>
+						<li class="inline"><a href=""><img src="assets/images/payments/visa.jpg"
+														   class="max-h-6 rounded inline"
+														   title="Visa"
+														   alt=""></a></li>
+					</ul>
+				</div><!--end grid-->
+			</div><!--end container-->
+		</div>
+	</footer><!--end footer-->
+	<!-- Footer End -->
+{% endif %}

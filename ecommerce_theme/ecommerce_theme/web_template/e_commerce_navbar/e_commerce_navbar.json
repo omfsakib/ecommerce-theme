@@ -1,0 +1,28 @@
+{
+ "creation": "2024-10-14 14:21:28.389973",
+ "docstatus": 0,
+ "doctype": "Web Template",
+ "fields": [
+  {
+   "fieldname": "logo_dark",
+   "fieldtype": "Attach Image",
+   "label": "Dark-Logo",
+   "reqd": 0
+  },
+  {
+   "fieldname": "logo_light",
+   "fieldtype": "Attach Image",
+   "label": "Light-Logo",
+   "reqd": 0
+  }
+ ],
+ "idx": 0,
+ "modified": "2024-10-14 14:25:00.535628",
+ "modified_by": "faruk@glascutr.com",
+ "module": "Ecommerce Theme",
+ "name": "E-commerce Navbar",
+ "owner": "faruk@glascutr.com",
+ "standard": 1,
+ "template": "",
+ "type": "Navbar"
+}

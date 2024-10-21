@@ -1,0 +1,141 @@
+{
+ "__unsaved": 1,
+ "creation": "2024-10-15 16:06:11.388722",
+ "docstatus": 0,
+ "doctype": "Web Template",
+ "fields": [
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title",
+   "reqd": 1
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "subtitle",
+   "fieldtype": "Data",
+   "label": "Subtitle",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "item_1",
+   "fieldtype": "Link",
+   "label": "Website Item ",
+   "options": "Website Item",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "item_2",
+   "fieldtype": "Link",
+   "label": "Website Item ",
+   "options": "Website Item",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "item_3",
+   "fieldtype": "Link",
+   "label": "Website Item ",
+   "options": "Website Item",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "item_4",
+   "fieldtype": "Link",
+   "label": "Website Item ",
+   "options": "Website Item",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "item_5",
+   "fieldtype": "Link",
+   "label": "Website Item ",
+   "options": "Website Item",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "item_6",
+   "fieldtype": "Link",
+   "label": "Website Item ",
+   "options": "Website Item",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "item_7",
+   "fieldtype": "Link",
+   "label": "Website Item ",
+   "options": "Website Item",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "item_8",
+   "fieldtype": "Link",
+   "label": "Website Item ",
+   "options": "Website Item",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "item_9",
+   "fieldtype": "Link",
+   "label": "Website Item ",
+   "options": "Website Item",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "item_10",
+   "fieldtype": "Link",
+   "label": "Website Item ",
+   "options": "Website Item",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "item_11",
+   "fieldtype": "Link",
+   "label": "Website Item ",
+   "options": "Website Item",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "item_12",
+   "fieldtype": "Link",
+   "label": "Website Item ",
+   "options": "Website Item",
+   "reqd": 0
+  }
+ ],
+ "idx": 0,
+ "modified": "2024-10-15 16:11:26.061428",
+ "modified_by": "Administrator",
+ "module": "Ecommerce Theme",
+ "name": "Product Grid",
+ "owner": "Administrator",
+ "standard": 1,
+ "template": "",
+ "type": "Section"
+}

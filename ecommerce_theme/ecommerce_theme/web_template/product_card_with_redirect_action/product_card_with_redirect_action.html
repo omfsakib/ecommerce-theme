@@ -1,0 +1,33 @@
+{% from 'templates/includes/item_card.html' import product_card %}
+{% set settings = get_webshop_settings() %}
+{% set cart_products = get_cart_products() %}
+
+<div class="grid items-end md:grid-cols-2 mb-6">
+	<div class="md:text-start text-center">
+		<h5 class="font-semibold text-3xl leading-normal mb-4">{{ values.title }}</h5>
+		<p class="text-slate-400 max-w-xl">{{ values.subtitle }}</p>
+	</div>
+
+	<div class="md:text-end hidden md:block">
+		<a href="{{ values.redirect_url }}" class="text-slate-400 hover:text-orange-500">{{ values.redirect_button_name }}<i
+			class="mdi mdi-arrow-right"></i></a>
+	</div>
+</div><!--end grid-->
+
+<div class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 pt-6 gap-6">
+	{%- for index in ['1', '2', '3', '4'] -%}
+		{%- set item = values['item_' + index] -%}
+		{%- if item -%}
+			{%- set web_item = frappe.get_doc("Website Item", item) -%}
+			{{ product_card(web_item, settings, cart_products) }}
+		{%- endif -%}
+	{%- endfor -%}
+</div><!--end grid-->
+
+<div class="grid grid-cols-1 mt-6">
+	<div class="text-center md:hidden block">
+		<a href="{{ values.redirect_url }}" class="text-slate-400 hover:text-orange-500">{{ values.redirect_button_name }} <i
+			class="mdi mdi-arrow-right"></i></a>
+	</div>
+</div>
+</div><!--end container-->

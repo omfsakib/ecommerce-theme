@@ -1,0 +1,169 @@
+{% macro render_menu(item, submenu=False, parent=False) %}
+	{% if item.child_items %}
+		<li class="has-submenu {% if parent and submenu %}parent-parent-menu-item{% elif parent %}child-menu-item{% endif %}">
+			<a href="javascript:void(0)">{{ _(item.label) }}</a>
+			{% if parent and submenu %}
+				<span class="menu-arrow"></span> {% else %}
+				<span class="submenu-arrow"></span>{% endif %}
+			<ul class="submenu">
+				{% for child in item.child_items %}
+					{{ render_menu(child, parent=True) }}
+				{% endfor %}
+			</ul>
+		</li>
+	{% else %}
+		{% set url = item.url or '' %}
+		{% set url = url if url.startswith('#') else url | abs_url %}
+		<li><a href="{{ url }}" {% if item.open_in_new_tab %} target="_blank" {% endif %}
+			   class="sub-menu-item">{{ _(item.label) }}</a></li>
+	{% endif %}
+{% endmacro %}
+
+{% set settings = frappe.get_doc("Website Settings", "Website Settings") %}
+{% set navbar_template_values = json.loads(settings.navbar_template_values) %}
+
+<!-- Start Navbar -->
+<nav id="topnav" class="defaultscroll is-sticky tagline-height">
+	<div class="container relative">
+		<!-- Logo container-->
+		<a class="logo" href="{{ url_prefix }}{{ home_page or "/" }}">
+			<div>
+				<img src="{{ navbar_template_values['logo_dark'] }}"
+					 class="h-[22px] inline-block dark:hidden"
+					 alt="">
+				<img src="{{ navbar_template_values['logo_light'] }}"
+					 class="h-[22px] hidden dark:inline-block"
+					 alt="">
+			</div>
+		</a>
+		<!-- End Logo container-->
+
+		<!-- Start Mobile Toggle -->
+		<div class="menu-extras">
+			<div class="menu-item">
+				<a class="navbar-toggle" id="isToggle" onclick="toggleMenu()">
+					<div class="lines">
+						<span></span>
+						<span></span>
+						<span></span>
+					</div>
+				</a>
+			</div>
+		</div>
+		<!-- End Mobile Toggle -->
+
+		<!--Login button Start-->
+		<ul class="buy-button list-none mb-0">
+			{% if navbar_search %}
+				<li class="dropdown inline-block relative pe-1">
+					<button data-dropdown-toggle="dropdown"
+							class="dropdown-toggle align-middle inline-flex" type="button">
+						<i data-feather="search" class="size-5"></i>
+					</button>
+					<!-- Dropdown menu -->
+					<div
+						class="dropdown-menu absolute overflow-hidden end-0 m-0 mt-5 z-10 md:w-52 w-48 rounded-md bg-white dark:bg-slate-900 shadow dark:shadow-gray-800 hidden"
+						onclick="event.stopPropagation();" id="dropdownMenuSearch">
+						<div class="relative">
+							<i data-feather="search" class="absolute size-4 top-[9px] end-3"></i>
+							<input type="search"
+								   class="h-9 px-3 pe-10 w-full border-0 focus:ring-0 outline-none bg-white dark:bg-slate-900 shadow dark:shadow-gray-800"
+								   name="query" id="search-box" placeholder="Search for Products"
+								   aria-label="Product">
+						</div>
+					</div>
+				</li>
+			{% endif %}
+
+			<li class="inline-block relative ps-0.5">
+				<a href="/cart"
+				   class="cart-icon size-9 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-base text-center rounded-full bg-orange-500 border border-orange-500 text-white"
+				>
+					<i data-feather="shopping-cart" class="h-4 w-4"></i>
+				</a>
+				<span
+					class="-top-1 absolute -right-2 text-center bg-slate-900  text-white w-6 rounded-md"
+					id="cart-count">0</span>
+			</li>
+			{% if frappe.db.get_single_value("Webshop Settings", "enable_wishlist") %}
+				<li class="inline-block relative ps-0.5 wishlist wishlist-icon">
+					<a href="/wishlist"
+					   class="size-9 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-base text-center rounded-full bg-orange-500 text-white">
+						<i data-feather="heart" class="h-4 w-4"></i>
+					</a>
+
+					<span
+						class="-top-1 absolute -right-2 text-center bg-slate-900  text-white w-6 rounded-md"
+						id="wish-count">0 </span>
+				</li>
+			{% endif %}
+			{% if not only_static %}
+				{% if frappe.session.user != 'Guest' %}
+					<li class="dropdown inline-block relative ps-0.5">
+						<button data-dropdown-toggle="dropdown"
+								class="dropdown-toggle items-center"
+								type="button">
+					<span class="user-image-wrapper size-9 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-base text-center rounded-full border border-orange-500 text-white"></span>
+						</button>
+						<!-- Dropdown menu -->
+						<div
+							class="dropdown-menu absolute end-0 m-0 mt-4 z-10 w-48 rounded-md overflow-hidden bg-white dark:bg-slate-900 shadow dark:shadow-gray-700 hidden"
+							onclick="event.stopPropagation();">
+							<ul class="py-2 text-start">
+								{%- for child in post_login -%}
+									{%- if child.url -%}
+										<li>
+											<a href="{{ child.url | abs_url }}"
+											   class="flex items-center font-medium py-2 px-4 dark:text-white/70 hover:text-orange-500 dark:hover:text-white"
+												{% if child.open_in_new_tab %}
+											   target="_blank" {% endif %} rel="nofollow"><i
+												data-feather="{% if child.label == "Log out" %}log-out{% else %}user{% endif %}"
+												class="h-4 w-4 me-2"></i>{{ child.label }}</a>
+										</li>
+									{%- endif -%}
+								{%- endfor -%}
+								<li class="switch-to-desk hidden">
+									<a href="/app"
+									   class="flex items-center font-medium py-2 px-4 dark:text-white/70 hover:text-orange-500 dark:hover:text-white"><i
+										data-feather="lock"
+										class="h-4 w-4 me-2"></i>{{ _('Switch To Desk') }}</a>
+								</li>
+								<li class="apps hidden">
+									<a href="/apps"
+									   class="flex items-center font-medium py-2 px-4 dark:text-white/70 hover:text-orange-500 dark:hover:text-white"><i
+										data-feather="box" class="h-4 w-4 me-2"></i>{{ _('Apps') }}
+									</a>
+								</li>
+							</ul>
+						</div>
+					</li><!--end dropdown-->
+				{% else %}
+					{% if not hide_login %}
+						<li class="dropdown inline-block relative ps-0.5">
+							<a href="/login"
+							   class="size-9 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-base text-center rounded-full bg-orange-500 text-white">
+								<i data-feather="log-in" class="h-4 w-4"></i></a>
+						</li>
+					{% endif %}
+				{% endif %}
+			{% endif %}
+		</ul>
+		<!--Login button End-->
+
+		<div id="navigation">
+			<!-- Navigation Menu-->
+			{% if top_bar_items -%}
+				<ul class="navigation-menu">
+
+					{%- for item in top_bar_items -%}
+						{% if not item.parent_label and not item.right -%}
+							{{ render_menu(item, parent=True, submenu=True) }}
+						{%- endif -%}
+					{%- endfor -%}
+				</ul><!--end navigation menu-->
+			{% endif %}
+		</div><!--end navigation-->
+	</div><!--end container-->
+</nav><!--end header-->
+<!-- End Navbar -->
+
