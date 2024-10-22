@@ -446,7 +446,7 @@ webshop.ProductView = class CustomProductView extends OriginalProductView {
 
 		if (this.products) {
 			let paging_html = `
-			<div class="container mt-6">
+			<div class="container mt-6 product-paging-area">
 				<div class="grid lg:grid-cols-4 md:grid-cols-4 gap-4">
 				    <div class=""></div>
 					<div class="lg:col-span-3 flex justify-between items-center">

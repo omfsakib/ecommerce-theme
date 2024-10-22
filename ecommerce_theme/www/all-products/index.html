@@ -23,31 +23,13 @@
 						</div>
 						<!-- field filters -->
 						{% if field_filters %}
-
-						{% endif %}
-						<!-- attribute filters -->
-						{% if attribute_filters %}
-							{{ attribute_filter_section(attribute_filters) }}
-						{% endif %}
-					</div>
-					<div class="collapse d-md-block mr-4 filters-section" id="product-filters">
-						<div
-							class="d-flex justify-content-between align-items-center mb-5 title-section">
-							<div class="mb-4 filters-title"> {{ _('Filters') }} </div>
-							<a class="mb-4 clear-filters"
-							   href="/all-products">{{ _('Clear All') }}</a>
-						</div>
-						<!-- field filters -->
-						{% if field_filters %}
 							{{ field_filter_section(field_filters) }}
 						{% endif %}
-
 						<!-- attribute filters -->
 						{% if attribute_filters %}
 							{{ attribute_filter_section(attribute_filters) }}
 						{% endif %}
 					</div>
-
 				</div>
 
 				<!-- Items section -->

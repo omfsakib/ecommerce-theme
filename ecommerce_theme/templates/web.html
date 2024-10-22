@@ -46,18 +46,26 @@
 	</script>
 
 	<!-- Css -->
-	<link href="assets/ecommerce_theme/libs/tobii/css/tobii.min.css" rel="stylesheet">
+	<link href="/assets/ecommerce_theme/libs/tobii/css/tobii.min.css" rel="stylesheet">
 	<!-- Main Css -->
-	<link href="assets/ecommerce_theme/libs/@mdi/font/css/materialdesignicons.min.css"
+	<link href="/assets/ecommerce_theme/libs/@mdi/font/css/materialdesignicons.min.css"
 		  rel="stylesheet"
 		  type="text/css">
-	<link href="assets/ecommerce_theme/css/tailwind.min.css" rel="stylesheet" type="text/css">
+	<link href="/assets/ecommerce_theme/css/tailwind.min.css" rel="stylesheet" type="text/css">
 
 </head>
 <body frappe-session-status="{{ 'logged-in' if frappe.session.user != 'Guest' else 'logged-out' }}"
 	  data-path="{{ path | e }}" {%- if template and template.endswith('.md') %}
 	  frappe-content-type="markdown" {%- endif %} class="dark:bg-slate-900 {{ body_class or '' }}">
 
+<div id="preloader">
+	<div id="status">
+		<div class="spinner">
+			<div class="double-bounce1"></div>
+			<div class="double-bounce2"></div>
+		</div>
+	</div>
+</div>
 
 {%- block banner -%}
 	{% include "templates/includes/banner_extension.html" ignore missing %}
@@ -102,10 +110,10 @@
 										itemprop="name">{{ parent.title or parent.label or parent.name or "" }}</span>
 											<meta itemprop="position" content="{{ loop.index }}"/>
 										</a></li>
+									<li class="inline-block text-base text-slate-950 dark:text-white mx-0.5 ltr:rotate-0 rtl:rotate-180">
+										<i
+											class="mdi mdi-chevron-right"></i></li>
 								{% endfor %}
-								<li class="inline-block text-base text-slate-950 dark:text-white mx-0.5 ltr:rotate-0 rtl:rotate-180">
-									<i
-										class="mdi mdi-chevron-right"></i></li>
 								<li itemprop="itemListElement" itemscope
 									itemtype="http://schema.org/ListItem"
 									class="inline-block uppercase text-[13px] font-bold text-orange-500"
@@ -198,10 +206,10 @@
 {%- endblock %}
 <!-- csrf_token -->
 {%- block body_include %}{{ body_include or "" }}{% endblock -%}
-<script src="assets/ecommerce_theme/libs/tobii/js/tobii.min.js"></script>
-<script src="assets/ecommerce_theme/libs/feather-icons/feather.min.js"></script>
-<script src="assets/ecommerce_theme/js/plugins.init.js"></script>
-<script src="assets/ecommerce_theme/js/app.js"></script>
+<script src="/assets/ecommerce_theme/libs/tobii/js/tobii.min.js"></script>
+<script src="/assets/ecommerce_theme/libs/feather-icons/feather.min.js"></script>
+<script src="/assets/ecommerce_theme/js/plugins.init.js"></script>
+<script src="/assets/ecommerce_theme/js/app.js"></script>
 <!-- JAVASCRIPTS -->
 </body>
 </html>

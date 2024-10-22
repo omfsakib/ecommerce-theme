@@ -1,0 +1,152 @@
+{% set cart_settings = shopping_cart.cart_settings %}
+{% set product_info = shopping_cart.product_info %}
+{% set price_info = product_info.get('price') or {} %}
+
+
+<div class="">
+	<h5 class="text-2xl font-semibold" itemprop="name">{{ _(doc.web_item_name) }}</h5>
+	<div class="mt-2">
+		<span class="text-slate-400 font-semibold me-1"
+			  itemprop="name">{{ _(doc.item_group) }}</span>
+		<span class="text-slate-400 font-semibold me-1"
+			  itemprop="name"> | {{ _("Item Code") }}: {{ _(doc.item_code) }}</span>
+	</div>
+	<div class="mt-2">
+		{% if cart_settings.show_price and product_info.price %}
+			{% if price_info.formatted_mrp %}
+				<span itemprop="lowPrice" class="text-slate-400 font-semibold me-1"
+					  content="{{ price_info.formatted_price_sales_uom }}">{{ price_info.formatted_price_sales_uom }} <del
+					itemprop="highPrice"
+					class="text-red-600">MRP {{ price_info.formatted_mrp }}</del></span>
+			{% else %}
+				<span itemprop="highPrice" class="text-slate-400 font-semibold me-1"
+					  content="{{ price_info.formatted_price_sales_uom }}">{{ price_info.formatted_price_sales_uom }}</span>
+			{% endif %}
+		{% endif %}
+
+		<ul class="list-none inline-block text-orange-400">
+			{% set full_stars = average_rating|int %}
+			{% set has_half_star = (average_rating - full_stars) >= 0.5 %}
+			{% set total_stars = 5 %}
+
+			{% for i in range(full_stars) %}
+				<li class="inline"><i class="mdi mdi-star text-lg"></i></li>
+			{% endfor %}
+
+			{% if has_half_star %}
+				<li class="inline"><i class="mdi mdi-star-half text-lg"></i></li>
+			{% endif %}
+
+			{% for i in range(total_stars - full_stars - (1 if has_half_star else 0) ) %}
+				<li class="inline"><i class="mdi mdi-star-outline text-lg"></i></li>
+			{% endfor %}
+			<li class="inline text-slate-400 font-semibold">{{ average_rating }}
+				({{ total_reviews }})
+			</li>
+		</ul>
+	</div>
+
+	<div class="mt-4">
+		<h5 class="text-lg font-semibold">Overview :</h5>
+		<p class="text-slate-400 mt-2" itemprop="description">
+			{% if frappe.utils.strip_html(doc.web_long_description or '') %}
+				{{ _(doc.web_long_description) | safe }}
+			{% elif frappe.utils.strip_html(doc.description or '') %}
+				{{ _(doc.description) | safe }}
+			{% else %}
+				{{ "" }}
+			{% endif %}</p>
+	</div>
+	<div class="mt-4 space-x-1">
+		<a href=""
+		   class="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center bg-orange-500 text-white rounded-md mt-2">Shop
+			Now</a>
+		{% if has_variants %}
+			{% if cart_settings.enable_variants | int %}
+				<button
+					data-item-code="{{ doc.item_code }}"
+					data-item-name="{{ doc.web_item_name }}"
+					class="btn-configure py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white mt-2"
+				>
+					{{ _('Select Variant') }}
+				</button>
+				<script>
+					{% include "templates/generators/item/item_configure.js" %}
+				</script>
+			{% endif %}
+		{% else %}
+			{% if product_info.price and (cart_settings.allow_items_not_in_stock or product_info.get("in_stock")) %}
+				<a href="/cart"
+				   class="btn-view-in-cart hidden py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white mt-2"
+				   role="button">
+					{{ _("View in Cart") if cart_settings.enable_checkout else _("View in Quote") }}
+				</a>
+				<button
+					data-item-code="{{ item_code }}"
+					class="btn-add-to-cart py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white mt-2"
+				>
+					{{ _("Add to Cart") if cart_settings.enable_checkout else  _("Add to Quote") }}
+				</button>
+			{% endif %}
+		{% endif %}
+	</div>
+</div><!--end content-->
+
+
+{% block base_scripts %}
+	<!-- js should be loaded in body! -->
+	<script type="text/javascript" src="/assets/frappe/js/lib/jquery/jquery.min.js"></script>
+{% endblock %}
+<script>
+	frappe.ready(() => {
+		$('.page_content').on('click', '.btn-add-to-cart', (e) => {
+			// Bind action on add to cart button
+			const $btn = $(e.currentTarget);
+			$btn.prop('disabled', true);
+			const item_code = $btn.data('item-code');
+			webshop.webshop.shopping_cart.update_cart({
+				item_code,
+				qty: 1,
+				callback(r) {
+					$btn.prop('disabled', false);
+					if (r.message) {
+						$('.btn-add-to-cart, .btn-view-in-cart').toggleClass('hidden');
+					}
+				}
+			});
+		});
+
+		$('.page_content').on('click', '.offer-details', (e) => {
+			// Bind action on More link in Offers
+			const $btn = $(e.currentTarget);
+			$btn.prop('disabled', true);
+
+			var d = new frappe.ui.Dialog({
+				title: __($btn.data('offer-title')),
+				fields: [
+					{
+						fieldname: 'offer_details',
+						fieldtype: 'HTML'
+					},
+					{
+						fieldname: 'section_break',
+						fieldtype: 'Section Break'
+					}
+				]
+			});
+
+			frappe.call({
+				method: 'webshop.webshop.doctype.website_offer.website_offer.get_offer_details',
+				args: {
+					offer_id: $btn.data('offer-id')
+				},
+				callback: (value) => {
+					d.set_value("offer_details", value.message);
+					d.show();
+					$btn.prop('disabled', false);
+				}
+			})
+
+		});
+	});
+</script>

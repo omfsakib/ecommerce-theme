@@ -1,0 +1,168 @@
+{% extends 'templates/web.html' %}
+
+{% block page_content %}
+	<!-- Start -->
+	{{ average_rating }}
+	<section class="page_content relative md:py-24 py-16">
+		<div class="container relative" itemscope itemtype="http://schema.org/Product">
+			<div class="grid md:grid-cols-2 grid-cols-1 gap-6 items-center">
+				{% include "ecommerce_theme/templates/generators/item/item_image.html" %}
+				{% include "ecommerce_theme/templates/generators/item/item_details.html" %}
+			</div><!--end grid-->
+
+
+			<div class="grid md:grid-cols-12 grid-cols-1 mt-6 gap-6">
+				<div class="lg:col-span-3 md:col-span-5">
+					<div class="sticky top-20">
+						<ul class="flex-column p-6 bg-white dark:bg-slate-900 shadow dark:shadow-gray-800 rounded-md"
+							id="myTab" data-tabs-toggle="#myTabContent" role="tablist">
+							<li role="presentation">
+								<button
+									class="px-4 py-2 text-start text-base font-semibold rounded-md w-full hover:text-orange-500 duration-500"
+									id="description-tab" data-tabs-target="#description"
+									type="button" role="tab" aria-controls="description"
+									aria-selected="true">Description
+								</button>
+							</li>
+							{% if website_specifications %}
+								<li role="presentation">
+									<button
+										class="px-4 py-2 text-start text-base font-semibold rounded-md w-full mt-3 duration-500"
+										id="addinfo-tab" data-tabs-target="#addinfo" type="button"
+										role="tab" aria-controls="addinfo" aria-selected="false">
+										Additional Information
+									</button>
+								</li>
+							{% endif %}
+							<li role="presentation">
+								<button
+									class="px-4 py-2 text-start text-base font-semibold rounded-md w-full mt-3 duration-500"
+									id="review-tab" data-tabs-target="#review" type="button"
+									role="tab" aria-controls="review" aria-selected="false">
+									Review
+								</button>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="lg:col-span-9 md:col-span-7">
+					<div id="myTabContent"
+						 class="p-6 bg-white dark:bg-slate-900 shadow dark:shadow-gray-800 rounded-md">
+						<div class="" id="description" role="tabpanel"
+							 aria-labelledby="profile-tab">
+							<p class="text-slate-400" itemprop="description">
+								{% if frappe.utils.strip_html(doc.web_long_description or '') %}
+									{{ _(doc.web_long_description) | safe }}
+								{% elif frappe.utils.strip_html(doc.description or '') %}
+									{{ _(doc.description) | safe }}
+								{% else %}
+									{{ "" }}
+								{% endif %}</p>
+						</div>
+
+						{% if website_specifications %}
+							<div class="hidden" id="addinfo" role="tabpanel"
+								 aria-labelledby="addinfo-tab">
+								<table class="w-full text-start">
+									<tbody>
+									{% for d in website_specifications -%}
+										<tr class="bg-white dark:bg-slate-900">
+											<td class="font-semibold pb-4" style="width: 100px;">
+												{{ _(d.label) }}
+											</td>
+											<td class="text-slate-400 pb-4">{{ _(d.description) }}
+											</td>
+										</tr>
+									{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						{% endif %}
+						<div class="hidden" id="review" role="tabpanel"
+							 aria-labelledby="review-tab">
+							<div class="flex justify-end">
+								{% if frappe.session.user != "Guest" and user_is_customer %}
+									<button
+										class="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white mt-2 btn-write-review"
+										data-web-item="{{ doc.name }}">
+										{{ _("Write a Review") }}
+									</button>
+								{% endif %}
+							</div>
+
+							{% for review in reviews %}
+								<div class="mt-8">
+									<div class="flex items-center justify-between">
+										<div class="flex items-center">
+											<p></p>
+
+											<div class="ms-3 flex-1">
+												<a href=""
+												   class="text-lg font-semibold hover:text-orange-500 duration-500">{{ _(review.customer) }}</a>
+												<p class="text-sm text-slate-400">{{ review.published_on }}</p>
+											</div>
+										</div>
+									</div>
+									<div
+										class="p-4 bg-gray-50 dark:bg-slate-800 rounded-md shadow dark:shadow-gray-800 mt-6">
+										<ul class="list-none inline-block text-orange-400">
+											{% set rating = review.rating * 5 %}
+											{% set full_stars = rating|int %}
+											{% set has_half_star = (rating - full_stars) >= 0.5 %}
+											{% set total_stars = 5 %}
+
+											{% for i in range(full_stars) %}
+												<li class="inline"><i
+													class="mdi mdi-star text-lg"></i></li>
+											{% endfor %}
+
+											{% if has_half_star %}
+												<li class="inline"><i
+													class="mdi mdi-star-half text-lg"></i></li>
+											{% endif %}
+
+											{% for i in range(total_stars - full_stars - (1 if has_half_star else 0) ) %}
+												<li class="inline"><i
+													class="mdi mdi-star-outline text-lg"></i></li>
+											{% endfor %}
+											<li class="inline text-slate-400 font-semibold">{{ rating }}
+											</li>
+										</ul>
+
+										<p class="text-slate-400 italic">" {{ _(review.comment) }}
+											"</p>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			</div><!--end grid-->
+		</div><!--end container-->
+		{% if show_recommended_items %}
+			{% from 'templates/includes/item_card.html' import product_card %}
+			{% set settings = get_webshop_settings() %}
+			{% set cart_products = get_cart_products() %}
+			<div class="container lg:mt-24 mt-16">
+				<div class="grid grid-cols-1 mb-6 text-center">
+					<h3 class="font-semibold text-3xl leading-normal">Recommended</h3>
+				</div><!--end grid-->
+				<div
+					class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 pt-6">
+					{% for item in recommended_items %}
+						{{ product_card(item) }}
+					{% endfor %}
+				</div>
+			</div>
+		{% endif %}
+	</section><!--end section-->
+{% endblock %}
+
+{% block base_scripts %}
+	<!-- js should be loaded in body! -->
+	<script type="text/javascript" src="/assets/frappe/js/lib/jquery/jquery.min.js"></script>
+	{{ include_script("frappe-web.bundle.js") }}
+	{{ include_script("controls.bundle.js") }}
+	{{ include_script("dialog.bundle.js") }}
+{% endblock %}
