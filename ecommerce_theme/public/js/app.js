@@ -851,12 +851,14 @@ $.extend(wishlist, {
 					$wishlist.removeClass('cart-animate');
 				}, 500);
 			}
+		}else{
+			$badge.remove();
 		}
 	},
 })
 
 frappe.ready(function () {
-	if (window.location.pathname !== "/wishlist") {
+	if (window.location.pathname !== "/me") {
 		$(".wishlist").toggleClass('hidden', false);
 		wishlist.set_wishlist_count();
 	} else {

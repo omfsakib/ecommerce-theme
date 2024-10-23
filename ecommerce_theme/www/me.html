@@ -1,0 +1,83 @@
+{% extends 'ecommerce_theme/templates/includes/profile.html' %}
+
+{% block title %}
+	{{ _("My Account") }}
+{% endblock %}
+
+{% block profile_content %}
+	<div class="lg:w-3/4 md:w-2/3 md:px-3 mt-6 md:mt-0">
+	<h5 class="text-lg font-semibold mb-6">My Orders</h5>
+	<div class="relative overflow-x-auto shadow dark:shadow-gray-800 rounded-md">
+		<table class="w-full text-start text-slate-500 dark:text-slate-400">
+			<thead class="text-sm uppercase bg-slate-50 dark:bg-slate-800">
+			<tr class="text-start">
+				<th scope="col" class="px-2 py-3 text-start">Order no.</th>
+				<th scope="col" class="px-2 py-3 text-start">Date</th>
+				<th scope="col" class="px-2 py-3 text-start">Status</th>
+				<th scope="col" class="px-2 py-3 text-start">Total</th>
+				<th scope="col" class="px-2 py-3 text-start">Action</th>
+			</tr>
+			</thead>
+			<tbody>
+			{% for sales_order in sales_orders %}
+				<tr class="bg-white dark:bg-slate-900 text-start border-t border-gray-100 dark:border-gray-700">
+					<th class="px-2 py-3 text-start" scope="row">{{ sales_order.name }}</th>
+					<td class="px-2 py-3 text-start">{{ frappe.utils.get_datetime(sales_order.transaction_date).strftime('%d %b, %Y') }}</td>
+					<td class="px-2 py-3 text-start text-{{ sales_order.indicator_color or ("blue" if sales_order.docstatus==1 else "gray") }}-400">{{ sales_order.status }}</td>
+					<td class="px-2 py-3 text-start">{{ sales_order.get_formatted("grand_total") }}</td>
+					<td class="px-2 py-3 text-start"><a href="/orders/{{ sales_order.name }}"
+														class="text-orange-500">View <i
+						class="mdi mdi-chevron-right"></i></a></td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+
+	<h5 class="text-lg font-semibold my-6">My favourite Items</h5>
+
+	<div class="rounded-md shadow dark:shadow-gray-800 p-6">
+		{% if items %}
+			<ul>
+				{% for item in items %}
+					<li class="flex justify-between items-center py-6 border-t border-gray-100 dark:border-gray-700">
+						<div class="flex items-center">
+							<img src="{{ item.image }}" itemprop="image"
+								 class="rounded shadow dark:shadow-gray-800 w-16"
+								 alt="{{ item.item_name }}">
+
+							<div class="ms-4">
+								<a href=""
+								   class="font-semibold hover:text-orange-500">{{ item.item_name }}</a>
+								<p class="text-green-600 text-sm mt-1" itemprop="offers" itemscope
+								   itemtype="https://schema.org/AggregateOffer">{{ item.formatted_price }}
+									{% if item.formatted_mrp %}
+										<del class="text-red-600">{{ item.formatted_mrp }}</del>
+									{% endif %}
+								</p>
+							</div>
+						</div>
+
+						<div>
+							<div data-item-code="{{ item.item_code }}"
+								 class="remove-wish relative size-9 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-base text-center bg-red-600/5 hover:bg-red-600 text-red-600 hover:text-white rounded-full">
+								<i
+									data-feather="trash-2" class="h-4 w-4"></i></div>
+						</div>
+					</li>
+				{% endfor %}
+
+			</ul>
+		{% else %}
+			<div class="cart-empty frappe-card">
+			<div class="cart-empty-state">
+				<img src="/assets/webshop/images/cart-empty-state.png" alt="Empty Cart">
+			</div>
+			<p class="cart-empty-message mt-4">{{ _('Wishlist is empty!') }}</p>
+			</p>
+		{% endif %}
+		</div>
+	</div>
+{% endblock %}
+
+
