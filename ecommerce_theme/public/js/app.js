@@ -62,19 +62,13 @@ function getClosest(elem, selector) {
 
 	// Element.matches() polyfill
 	if (!Element.prototype.matches) {
-		Element.prototype.matches =
-			Element.prototype.matchesSelector ||
-			Element.prototype.mozMatchesSelector ||
-			Element.prototype.msMatchesSelector ||
-			Element.prototype.oMatchesSelector ||
-			Element.prototype.webkitMatchesSelector ||
-			function (s) {
-				var matches = (this.document || this.ownerDocument).querySelectorAll(s),
-					i = matches.length;
-				while (--i >= 0 && matches.item(i) !== this) {
-				}
-				return i > -1;
-			};
+		Element.prototype.matches = Element.prototype.matchesSelector || Element.prototype.mozMatchesSelector || Element.prototype.msMatchesSelector || Element.prototype.oMatchesSelector || Element.prototype.webkitMatchesSelector || function (s) {
+			var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+				i = matches.length;
+			while (--i >= 0 && matches.item(i) !== this) {
+			}
+			return i > -1;
+		};
 	}
 
 	// Get the closest matching element
@@ -156,10 +150,7 @@ if (document.getElementById("navigation")) {
 function windowScroll() {
 	const navbar = document.getElementById("topnav");
 	if (navbar != null) {
-		if (
-			document.body.scrollTop >= 50 ||
-			document.documentElement.scrollTop >= 50
-		) {
+		if (document.body.scrollTop >= 50 || document.documentElement.scrollTop >= 50) {
 			navbar.classList.add("nav-sticky");
 		} else {
 			navbar.classList.remove("nav-sticky");
@@ -420,9 +411,7 @@ webshop.ProductView = class CustomProductView extends OriginalProductView {
 
 		["btn-list-view", "btn-grid-view"].forEach(view => {
 			let icon = view === "btn-list-view" ? "list" : "image-view";
-			let svgIcon = icon === 'image-view'
-				? `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-grid"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>`
-				: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`;
+			let svgIcon = icon === 'image-view' ? `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-grid"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>` : `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`;
 
 			$(".toggle-container").append(`
             <div class="py-1 px-2 inline-block font-medium tracking-wide align-middle duration-500 text-base text-center bg-orange-500/10 text-orange-500 rounded-md me-2 mt-2 flex items-center" id="toggle-view">
@@ -745,16 +734,53 @@ webshop.ProductGrid = class CustomProductGrid extends OriginalProductGrid {
 
 	get_card_body_html(item, title, settings) {
 		let body_html = `
-			<div class="mt-4">
-		`;
+        <div class="mt-4">
+    `;
 		body_html += this.get_title(item, title);
 
-		body_html += `<div class="flex justify-between items-center mt-1">`;
+		body_html += `<div class="flex justify-between items-center mt-1 price-section-${item.name}">`;
 		if (item.formatted_price) {
 			body_html += this.get_price_html(item);
+		} else {
+			body_html += `<p></p>`
 		}
+		frappe.call({
+			method: "webshop.webshop.doctype.item_review.item_review.get_item_reviews", args: {
+				web_item: item.name
+			}, callback: (result) => {
+				if (result.message) {
+					let res = result.message;
+					let average_rating = res.average_rating || 0;
 
-		body_html += `<p class="text-slate-500" itemprop="name">${item.item_group || ''}</p>`;
+					// Calculate the number of stars (full, half, and empty)
+					let full_stars = Math.floor(average_rating);
+					let has_half_star = (average_rating - full_stars) >= 0.5;
+					let total_stars = 5;
+
+					// Create stars HTML
+					let stars_html = `<ul class="list-none inline-block text-orange-400">`;
+
+					// Full stars
+					for (let i = 0; i < full_stars; i++) {
+						stars_html += `<li class="inline"><i class="mdi mdi-star text-lg"></i></li>`;
+					}
+
+					// Half star
+					if (has_half_star) {
+						stars_html += `<li class="inline"><i class="mdi mdi-star-half text-lg"></i></li>`;
+					}
+
+					// Empty stars
+					for (let i = 0; i < total_stars - full_stars - (has_half_star ? 1 : 0); i++) {
+						stars_html += `<li class="inline"><i class="mdi mdi-star-outline text-lg"></i></li>`;
+					}
+
+					// Append rating and review count
+					stars_html += `</ul>`;
+					$(`.price-section-${item.name}`).append(stars_html);
+				}
+			}
+		});
 		body_html += `</div>`;
 		body_html += `</div>`;
 		return body_html;
@@ -791,12 +817,7 @@ var shopping_cart = webshop.webshop.shopping_cart;
 $.extend(shopping_cart, {
 	shopping_cart_update: function ({item_code, qty, cart_dropdown, additional_notes}) {
 		shopping_cart.update_cart({
-			item_code,
-			qty,
-			additional_notes,
-			with_items: 1,
-			btn: this,
-			callback: function (r) {
+			item_code, qty, additional_notes, with_items: 1, btn: this, callback: function (r) {
 				if (!r.exc) {
 					window.location.reload();
 				}
@@ -805,3 +826,42 @@ $.extend(shopping_cart, {
 	},
 });
 
+var wishlist = webshop.webshop.wishlist;
+$.extend(wishlist, {
+	set_wishlist_count: function (animate = false) {
+		// set badge count for wishlist icon
+		var wish_count = frappe.get_cookie("wish_count");
+		if (frappe.session.user === "Guest") {
+			wish_count = 0;
+		}
+
+		if (wish_count) {
+			$(".wishlist").toggleClass('hidden', false);
+		}
+
+		var $wishlist = $('.wishlist-icon');
+		var $badge = $wishlist.find("#wish-count");
+
+
+		if (wish_count) {
+			$badge.html(wish_count);
+			if (animate) {
+				$wishlist.addClass('cart-animate');
+				setTimeout(() => {
+					$wishlist.removeClass('cart-animate');
+				}, 500);
+			}
+		}
+	},
+})
+
+frappe.ready(function () {
+	if (window.location.pathname !== "/wishlist") {
+		$(".wishlist").toggleClass('hidden', false);
+		wishlist.set_wishlist_count();
+	} else {
+		wishlist.bind_move_to_cart_action();
+		wishlist.bind_remove_action();
+	}
+
+});

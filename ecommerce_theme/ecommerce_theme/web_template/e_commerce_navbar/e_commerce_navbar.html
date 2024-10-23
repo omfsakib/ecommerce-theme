@@ -85,6 +85,7 @@
 					class="-top-1 absolute -right-2 text-center bg-slate-900  text-white w-6 rounded-md"
 					id="cart-count">0</span>
 			</li>
+
 			{% if frappe.db.get_single_value("Webshop Settings", "enable_wishlist") %}
 				<li class="inline-block relative ps-0.5 wishlist wishlist-icon">
 					<a href="/wishlist"
