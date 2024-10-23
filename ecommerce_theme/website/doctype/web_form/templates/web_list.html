@@ -1,0 +1,29 @@
+{% extends 'templates/includes/profile.html' %}
+
+{% block profile_content %}
+	<div class="lg:w-3/4 md:w-2/3 md:px-3 mt-6 md:mt-0">
+		<div class="p-6 rounded-md shadow dark:shadow-gray-800 bg-white dark:bg-slate-900">
+			<div class="flex justify-between pb-4">
+				<h6 class="text-slate-400 font-bold mb-0 text-2xl">{{ _(list_title or title) }}</h6>
+				{%- if allow_multiple -%}
+					<a class="btn btn-primary btn-sm button-new"
+					   href="/{{ route }}/new">{{ _("New") }}</a>
+				{%- endif -%}
+			</div>
+			<div class="w-100">
+				<div class="web-list-table w-100"></div>
+				<div class="web-list-footer"></div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block script %}
+	<script>
+		frappe.boot = {{ boot }};
+		frappe._messages = {{ translated_messages }};
+		frappe.web_form_doc = {{ web_form_doc | json }};
+	</script>
+
+	{{ include_script("web_form.bundle.js") }}
+{% endblock script %}

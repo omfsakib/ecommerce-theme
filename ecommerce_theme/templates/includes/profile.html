@@ -1,7 +1,7 @@
 {% extends 'templates/web.html' %}
 
 {% block page_content %}
-
+	{% set current_user = frappe.get_doc("User", frappe.session.user) %}
 	<!-- Start Hero -->
 	<section class="relative lg:pb-24 pb-16 md:mt-[84px] mt-[70px] page-content">
 		<div class="md:container container-fluid relative">
@@ -59,7 +59,7 @@
 									</li>
 
 									<li class="navbar-item account-menu">
-										<a href="user-billing.html"
+										<a href="/address/list"
 										   class="navbar-link text-slate-400 flex items-center py-2 rounded">
 											<span class="me-2 mb-0"><i data-feather="edit"
 																	   class="size-4"></i></span>
@@ -68,7 +68,7 @@
 									</li>
 
 									<li class="navbar-item account-menu">
-										<a href="user-payment.html"
+										<a href="#"
 										   class="navbar-link text-slate-400 flex items-center py-2 rounded">
 											<span class="me-2 mb-0"><i data-feather="credit-card"
 																	   class="size-4"></i></span>
