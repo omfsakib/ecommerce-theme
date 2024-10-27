@@ -1,6 +1,6 @@
-{% extends 'templates/web.html' %}
+{% extends "templates/web.html" %}
 
-{%- block title -%}{{ _("Not Found") }}{%- endblock -%}
+{% block title %}{{ title or _("Message") }}{% endblock %}
 {% block navbar %}{% endblock %}
 {% block footer %}{% endblock %}
 
@@ -26,14 +26,16 @@
 					<div class="title-heading text-center my-auto">
 						<img src="/assets/ecommerce_theme/images/error.svg" class="mx-auto w-72"
 							 alt="">
-						<h1 class="mt-8 mb-6 md:text-5xl text-3xl font-bold">Page Not Found?</h1>
-						<p class="text-slate-400">Whoops, this is embarassing. <br> Looks like the
-							page you were looking for wasn't found.</p>
+						<h1 class="mt-8 mb-6 md:text-5xl text-3xl font-bold">{{ title or _("Message") }}</h1>
+						<p class="text-slate-400">{{ message }} <br>
+							{% if error_code %}
+								{{ _("Status: {0}").format(error_code) }}
+							{% endif %}
+						</p>
 
 						<div class="mt-4">
-							<a href="{{ url_prefix }}{{ home_page or "/" }}"
-							   class="py-2 px-5 inline-block font-semibold tracking-wide border align-middle duration-500 text-base text-center bg-orange-500 hover:bg-orange-600 border-orange-500 hover:border-orange-600 text-white rounded-md">Back
-								to Home</a>
+							<a href="{{ primary_action or "/" }}"
+							   class="action-button py-2 px-5 inline-block font-semibold tracking-wide border align-middle duration-500 text-base text-center bg-orange-500 hover:bg-orange-600 border-orange-500 hover:border-orange-600 text-white rounded-md">{{ primary_label or _("Home") }}</a>
 						</div>
 					</div>
 					<div class="text-center">
@@ -51,8 +53,13 @@
 		   class="back-button size-9 inline-flex items-center justify-center tracking-wide border align-middle duration-500 text-base text-center bg-orange-500 hover:bg-orange-600 border-orange-500 hover:border-orange-600 text-white rounded-full"><i
 			data-feather="arrow-left" class="h-4 w-4"></i></a>
 	</div>
-	<!-- End -->
 	<script>
-		window.is_404 = true;
-	</script>
+	frappe.ready(function() {
+		if (window.location.hash || window.location.href.includes('/app')) {
+			localStorage.setItem('session_last_route', window.location.pathname);
+		}
+
+		$('.action-button').focus();
+	});
+</script>
 {% endblock %}

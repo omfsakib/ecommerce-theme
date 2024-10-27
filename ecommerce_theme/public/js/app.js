@@ -286,26 +286,41 @@ try {
 /* Dark & Light Mode */
 /*********************/
 try {
-	function changeTheme(e) {
-		e.preventDefault()
-		const htmlTag = document.getElementsByTagName("html")[0]
-
-		if (htmlTag.className.includes("dark")) {
-			htmlTag.className = 'light'
-		} else {
-			htmlTag.className = 'dark'
-		}
+	// Function to apply theme based on the mode
+	function applyTheme(theme) {
+		const htmlTag = document.getElementsByTagName("html")[0];
+		htmlTag.className = theme;
+		localStorage.setItem('theme', theme);
 	}
 
-	const switcher = document.getElementById("theme-mode")
-	switcher?.addEventListener("click", changeTheme)
+	// Function to change theme on user interaction
+	function changeTheme(e) {
+		e.preventDefault();
+		const htmlTag = document.getElementsByTagName("html")[0];
+		const currentTheme = htmlTag.className.includes("dark") ? 'light' : 'dark';
+		applyTheme(currentTheme);
+	}
+
+	// Initialize theme on page load
+	function initializeTheme() {
+		const savedTheme = localStorage.getItem('theme') || 'light';
+		applyTheme(savedTheme);
+	}
+
+	// Event listeners for the theme toggle elements
+	const switcher = document.getElementById("theme-mode");
+	switcher?.addEventListener("click", changeTheme);
 
 	const chk = document.getElementById('chk');
+	chk?.addEventListener('change', changeTheme);
 
-	chk.addEventListener('change', changeTheme);
+	// Set the initial theme when the page loads
+	initializeTheme();
+
 } catch (err) {
-
+	console.error("Error in theme switcher: ", err);
 }
+
 
 /*********************/
 /* LTR & RTL Mode */
@@ -851,7 +866,7 @@ $.extend(wishlist, {
 					$wishlist.removeClass('cart-animate');
 				}, 500);
 			}
-		}else{
+		} else {
 			$badge.remove();
 		}
 	},
