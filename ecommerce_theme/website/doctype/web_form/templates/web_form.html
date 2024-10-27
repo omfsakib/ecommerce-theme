@@ -1,0 +1,120 @@
+{% extends 'templates/includes/profile.html' %}
+
+{% block profile_content %}
+	<div class="lg:w-3/4 md:w-2/3 md:px-3 mt-6 md:mt-0">
+		<div class="p-6 rounded-md shadow dark:shadow-gray-800 bg-white dark:bg-slate-900">
+			<div class="flex justify-between pb-4 border-b">
+				<div>
+					{% if show_list and not is_new %}
+						<h1 class="ellipsis text-slate-400 font-bold mb-0 text-2xl">{{ _(web_form_title) }}</h1>
+						<p class="ellipsis mb-0 font-medium">{{ _(title) }}</p>
+					{% else %}
+						<h1 class="ellipsis text-slate-400 font-bold mb-0 text-2xl">{{ _(title) }}</h1>
+					{% endif %}
+					{% if introduction_text and (is_new or in_edit_mode) %}
+						<div class="web-form-introduction">{{ introduction_text }}</div>
+					{% endif %}
+				</div>
+				<div class="flex items-center space-x-1">
+					{%- if allow_edit and in_view_mode -%}
+						<a class="btn btn-primary btn-sm button-new"
+						   href="/{{ route }}/{{ doc_name }}/edit">{{ _("Edit", context="Button in web form") }}</a>
+					{%- endif -%}
+					{% if allow_print and in_view_mode %}
+						{% set print_format_url = "/printview?doctype=" + doc_type + "&name=" + doc_name + "&format=" + (print_format or "standard") %}
+						<!-- print button -->
+						<a href="{{ print_format_url }}" target="_blank"
+						   class="print-btn btn btn-primary btn-sm ml-2">
+							<svg class="icon icon-sm">
+								<use href="#icon-printer"></use>
+							</svg>
+						</a>
+					{% endif %}
+				</div>
+			</div>
+			<div class="w-100 mt-2 ">
+				<!-- main card -->
+				<form role="form" class="web-form">
+					<div class="web-form-body border-b">
+						<div class="web-form-wrapper">
+							{% include "website/doctype/web_form/templates/web_form_skeleton.html" %}
+						</div>
+					</div>
+					<div class="web-form-footer">
+						<div class="web-form-actions">
+							<div class="flex justify-between items-center mt-2 w-100">
+								<p></p>
+								<div class="flex items-center space-x-1">
+									{% if not in_view_mode %}
+										<!-- discard button -->
+										<button
+											class="discard-btn btn bg-orange-500/5 text-orange-500 rounded flex align-middle justify-center items-center mx-auto shadow-sm dark:shadow-gray-800 btn-sm">
+											{{ _("Discard", context="Button in web form") }}
+										</button>
+										<!-- submit button -->
+										<button type="submit"
+												class="submit-btn btn btn-primary btn-sm ml-2">{{ _(button_label, context="Button in web form") or _("Submit", context="Button in web form") }}</button>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block script %}
+	<script>
+		frappe.boot = {{ boot }};
+		frappe._messages = {{ translated_messages }};
+		frappe.web_form_doc = {{ web_form_doc | json }};
+		frappe.reference_doc = {{ reference_doc | json }};
+
+		function in_iframe() {
+			try {
+				return window.self !== window.top;
+			} catch (e) {
+				return true;
+			}
+		}
+
+		if (in_iframe()) {
+			// hide everything except the form and fix styles
+			$('.web-form-header').hide()
+			$('.web-form').css('border', 'none').css('padding', 'unset');
+		}
+	</script>
+	{{ include_script("web_form.bundle.js") }}
+
+	<script>
+		{% if client_script %}
+			frappe.init_client_script = () => {
+				try {
+					{{ client_script }}
+				} catch (e) {
+					console.error('Error in web form client script');
+					console.error(e);
+				}
+			}
+		{% endif %}
+
+		{% if script is defined %}
+			{{ script }}
+		{% endif %}
+	</script>
+{% endblock script %}
+
+{% block style %}
+	<style>
+		{% if style is defined %}
+			{{ style }}
+		{% endif %}
+
+		{% if custom_css %}
+			{{ custom_css }}
+		{% endif %}
+	</style>
+{% endblock %}
+

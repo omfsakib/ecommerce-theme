@@ -1,0 +1,54 @@
+{% extends 'templates/web.html' %}
+
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block page_content %}
+	{% set settings = frappe.get_doc("Website Settings", "Website Settings") %}
+	{% set navbar_template_values = json.loads(settings.navbar_template_values) %}
+	<section class="relative bg-orange-500/5">
+		<div class="container-fluid relative">
+			<div class="grid grid-cols-1">
+				<div class="flex flex-col min-h-screen justify-center md:px-10 py-10 px-4">
+					<div class="text-center">
+						<a class="logo" href="{{ url_prefix }}{{ home_page or "/" }}">
+							<div>
+								<img src="{{ navbar_template_values['logo_dark'] }}"
+									 class="h-[22px] inline-block dark:hidden"
+									 alt="">
+								<img src="{{ navbar_template_values['logo_light'] }}"
+									 class="h-[22px] hidden dark:inline-block"
+									 alt="">
+							</div>
+						</a>
+					</div>
+					<div class="title-heading text-center my-auto">
+						<img src="/assets/ecommerce_theme/images/error.svg" class="mx-auto w-72"
+							 alt="">
+						<h1 class="mt-8 mb-6 md:text-5xl text-3xl font-bold">Page Not Found?</h1>
+						<p class="text-slate-400">Whoops, this is embarassing. <br> Looks like the
+							page you were looking for wasn't found.</p>
+
+						<div class="mt-4">
+							<a href="{{ url_prefix }}{{ home_page or "/" }}"
+							   class="py-2 px-5 inline-block font-semibold tracking-wide border align-middle duration-500 text-base text-center bg-orange-500 hover:bg-orange-600 border-orange-500 hover:border-orange-600 text-white rounded-md">Back
+								to Home</a>
+						</div>
+					</div>
+					<div class="text-center">
+						<p class="mb-0 text-slate-400">{% if copyright %}
+							&copy; {{ copyright }}
+						{% endif %}
+						</p>
+					</div>
+				</div>
+			</div><!--end grid-->
+		</div><!--end container-->
+	</section><!--end section-->
+	<div class="fixed bottom-3 end-3">
+		<a href=""
+		   class="back-button size-9 inline-flex items-center justify-center tracking-wide border align-middle duration-500 text-base text-center bg-orange-500 hover:bg-orange-600 border-orange-500 hover:border-orange-600 text-white rounded-full"><i
+			data-feather="arrow-left" class="h-4 w-4"></i></a>
+	</div>
+	<!-- End -->
+{% endblock %}

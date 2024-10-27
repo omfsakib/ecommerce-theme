@@ -5395,7 +5395,7 @@ element {
 	color: var(--neutral);
 	white-space: nowrap;
 	--icon-stroke: currentColor;
-	--icon-fill-bg: rgb(249 115 22 /1) ;
+	--icon-fill-bg: rgb(249 115 22 /1);
 	border: none;
 	border-radius: 8px;
 	box-shadow: none;
@@ -5404,110 +5404,141 @@ element {
 	letter-spacing: .02em;
 	color: white;
 }
+
 .address-card.active .check {
-  display: inline-flex !important;
+	display: inline-flex !important;
 }
+
 .address-card {
-  cursor: pointer;
-  position: relative;
+	cursor: pointer;
+	position: relative;
 }
+
 .address-card.active {
-  border-color:rgb(249 115 22 /1);
+	border-color: rgb(249 115 22 /1);
 }
+
 .w-100 {
-  width: 100% !important;
-}
-.col-sm-12{
 	width: 100% !important;
 }
+
+.col-sm-12 {
+	width: 100% !important;
+}
+
 .modal .address-card .card-body {
-  padding: 7px;
-  border-radius: 8px;
-  border: 1px solid #e2e2e2;
+	padding: 7px;
+	border-radius: 8px;
+	border: 1px solid #e2e2e2;
 }
+
 .address-card .card-body {
-  max-width: 80%;
+	max-width: 80%;
 }
+
 .card-body {
-  flex: 1 1 auto;
-  min-height: 1px;
-  padding: 1.25rem;
+	flex: 1 1 auto;
+	min-height: 1px;
+	padding: 1.25rem;
 }
 
 .check {
-  color: #fff;
-  font-size: 12px;
+	color: #fff;
+	font-size: 12px;
 }
+
 .check {
-  display: inline-flex;
-  padding: .25rem;
-  background: rgb(249 115 22 /1);
-  color: #fff;
-  border-radius: 50%;
-  font-size: 12px;
-  width: 24px;
-  height: 24px;
+	display: inline-flex;
+	padding: .25rem;
+	background: rgb(249 115 22 /1);
+	color: #fff;
+	border-radius: 50%;
+	font-size: 12px;
+	width: 24px;
+	height: 24px;
 }
 
 .web-list-table {
-	 overflow: auto;
-}
- .web-list-table .table {
-	 border-bottom: 1px solid #ededed;
-	 border-top: 1px solid #ededed;
-	 width: 100%;
-}
- .web-list-table .table thead tr th {
-	 border: 0;
-	 font-size: 13px;
-	 font-weight: normal;
-	 color: #525252;
-}
- .web-list-table .table thead tr th input[type="checkbox"] {
-	 margin-bottom: -2px;
-}
- .web-list-table .table tbody tr {
-	 color: #8f8f8f;
-	 cursor: pointer;
-}
- .web-list-table .table tbody tr td {
-	 font-size: 13px;
-	 border-top: 1px solid #ededed;
-	 max-width: 160px;
-}
- .web-list-table .table tbody tr td .ql-editor, .web-list-table .table tbody tr td p {
-	 width: max-content;
-	 max-width: 150px;
-	 margin-bottom: 0;
-}
- .web-list-table .table tbody tr td .ql-editor.read-mode, .web-list-table .table tbody tr td p.read-mode {
-	 display: inline-flex;
-	 gap: 5px;
-}
- .web-list-table .table input[type="checkbox"] {
-	 margin-top: 2px;
-}
- .web-list-table .table .list-col-checkbox {
-	 width: 1rem;
-}
- .web-list-table .table .list-col-serial {
-	 width: 1.5rem;
-}
- .web-list-table .no-result {
-	 min-height: 330px;
-	 border-top: 1px solid #ededed;
+	overflow: auto;
 }
 
- .web-list-table .table thead th {
-  vertical-align: bottom;
-  border-bottom: 2px solid #e2e2e2;
+.web-list-table .table {
+	border-bottom: 1px solid #ededed;
+	border-top: 1px solid #ededed;
+	width: 100%;
 }
- .web-list-table .table th, .table td {
-  padding: .75rem;
-  vertical-align: top;
-  border-top: 1px solid #e2e2e2;
+
+.web-list-table .table thead tr th {
+	border: 0;
+	font-size: 13px;
+	font-weight: normal;
+	color: #525252;
 }
- .web-list-table th {
-  text-align: inherit;
-  text-align: -webkit-match-parent;
+
+.web-list-table .table thead tr th input[type="checkbox"] {
+	margin-bottom: -2px;
+}
+
+.web-list-table .table tbody tr {
+	color: #8f8f8f;
+	cursor: pointer;
+}
+
+.web-list-table .table tbody tr td {
+	font-size: 13px;
+	border-top: 1px solid #ededed;
+	max-width: 160px;
+}
+
+.web-list-table .table tbody tr td .ql-editor, .web-list-table .table tbody tr td p {
+	width: max-content;
+	max-width: 150px;
+	margin-bottom: 0;
+}
+
+.web-list-table .table tbody tr td .ql-editor.read-mode, .web-list-table .table tbody tr td p.read-mode {
+	display: inline-flex;
+	gap: 5px;
+}
+
+.web-list-table .table input[type="checkbox"] {
+	margin-top: 2px;
+}
+
+.web-list-table .table .list-col-checkbox {
+	width: 1rem;
+}
+
+.web-list-table .table .list-col-serial {
+	width: 1.5rem;
+}
+
+.web-list-table .no-result {
+	min-height: 330px;
+	border-top: 1px solid #ededed;
+}
+
+.web-list-table .table thead th {
+	vertical-align: bottom;
+	border-bottom: 2px solid #e2e2e2;
+}
+
+.web-list-table .table th, .table td {
+	padding: .75rem;
+	vertical-align: top;
+	border-top: 1px solid #e2e2e2;
+}
+
+.web-list-table th {
+	text-align: inherit;
+	text-align: -webkit-match-parent;
+}
+
+.like-disabled-input {
+	min-height: 28px;
+	border-radius: 8px;
+	padding: 4px 8px;
+	cursor: default;
+	color: #7c7c7c;
+	background-color: #f8f8f8;
 }
