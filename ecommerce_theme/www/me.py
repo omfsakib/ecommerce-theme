@@ -23,4 +23,6 @@ def get_context(context):
 
 	items = set_stock_price_details(items, settings, selling_price_list)
 	context.items = items
-	context.sales_orders = get_transaction_list(doctype="Sales Order")
+	context.sales_orders = get_transaction_list(
+		doctype="Sales Order") if settings.enable_checkout else get_transaction_list(
+		doctype="Quotation")

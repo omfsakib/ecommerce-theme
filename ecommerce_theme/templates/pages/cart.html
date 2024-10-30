@@ -285,12 +285,12 @@
 		<div class="cart-empty-message mt-4">{{ _('Your cart is Empty') }}</p>
 			{% if cart_settings.enable_checkout %}
 				<a class="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center bg-orange-500 text-white rounded-md mt-2"
-				   href="/orders" style="font-size: 16px;">
+				   href="/me" style="font-size: 16px;">
 					{{ _('See past orders') }}
 				</a>
 			{% else %}
 				<a class="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center bg-orange-500 text-white rounded-md mt-2"
-				   href="/quotations" style="font-size: 16px;">
+				   href="/me" style="font-size: 16px;">
 					{{ _('See past quotations') }}
 				</a>
 			{% endif %}
