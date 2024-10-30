@@ -1,0 +1,246 @@
+{% extends "templates/web.html" %}
+
+{% set title = heading or "Contact Us" %}
+{% block header %}<h1>{{ heading or _("Contact Us") }}</h1>{% endblock %}
+
+{% block page_content %}
+	<section class="relative lg:py-24 py-16">
+		<div class="container">
+			{% if introduction %}
+				<div>
+					{{ introduction or "" }}<br>
+				</div>
+			{% endif %}
+			<div class="grid md:grid-cols-12 grid-cols-1 items-center gap-6">
+				<div class="lg:col-span-7 md:col-span-6">
+					<img src="assets/ecommerce_theme/images/contact.svg" alt="">
+				</div>
+
+				<div class="lg:col-span-5 md:col-span-6">
+					<div class="lg:ms-5">
+						<div
+							class="bg-white dark:bg-slate-900 rounded-md shadow dark:shadow-gray-700 p-6">
+							<h3 class="mb-6 text-2xl leading-normal font-semibold">Get in touch
+								!</h3>
+							<p id="contact-alert"
+							   class="alert alert-warning text-red-600 font-bold font-medium"
+							   style="display: none;">&nbsp;</p>
+							<form method="post" name="myForm" id="myForm"
+								  onsubmit="return validateForm()">
+								<p class="mb-0" id="error-msg"></p>
+								<div id="simple-msg"></div>
+								<div class="grid lg:grid-cols-12 grid-cols-1 gap-3">
+									<div class="lg:col-span-6">
+										<label for="subject" class="font-semibold">Subject:</label>
+										<select name="subject" id="subject"
+												class="mt-2 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-100 dark:border-gray-800 focus:ring-0">
+											{% if query_options -%}
+												{% for option in query_options.split("\n") -%}
+													<option
+														value="{{ option }}">{{ _(option) }}</option>
+												{%- endfor %}
+											{% else %}
+												<option value="General">{{ _("General") }}</option>
+											{% endif %}
+										</select>
+									</div>
+
+									<div class="lg:col-span-6">
+										<label for="email" class="font-semibold">Your
+											Email:</label>
+										<input name="email" id="email" type="text"
+											   class="mt-2 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-100 dark:border-gray-800 focus:ring-0"
+											   placeholder="{{ _('Your email address') }}">
+									</div>
+
+									<div class="lg:col-span-12">
+										<label for="message" class="font-semibold">Your
+											Comment:</label>
+										<textarea name="message" id="message"
+												  class="mt-2 w-full py-2 px-3 h-28 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-100 dark:border-gray-800 focus:ring-0"
+												  placeholder="Message :"></textarea>
+									</div>
+								</div>
+								<button type="button" id="submit" name="send"
+										class="btn-send py-2 px-5 inline-block tracking-wide align-middle duration-500 text-base text-center bg-orange-500 text-white rounded-md mt-2">
+									{{ _("Send Message") }}
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><!--end container-->
+		{% if address_title %}
+			<div class="container lg:mt-24 mt-16">
+				<div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-6" itemscope
+					 itemtype="http://schema.org/PostalAddress">
+					<div class="text-center px-6">
+						<div class="relative text-transparent">
+							<div
+								class="size-20 bg-orange-500/5 text-orange-500 rounded-xl text-2xl flex align-middle justify-center items-center mx-auto shadow-sm dark:shadow-gray-800">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+									 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+									 stroke-width="2" stroke-linecap="round"
+									 stroke-linejoin="round"
+									 class="feather feather-phone">
+									<path
+										d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+								</svg>
+							</div>
+						</div>
+
+						<div class="content mt-7">
+							<h5 class="title h5 text-lg font-semibold">Phone</h5>
+							<p class="text-slate-400 mt-3">The phrasal sequence of the is now so
+								that
+								many campaign and benefit</p>
+
+							<div class="mt-5">
+								<a href="tel:{{ phone }}" class="text-orange-500 font-medium">
+									{% if phone %}
+										<span itemprop="telephone">{{ phone }}</span>
+									{% endif %}</a>
+							</div>
+						</div>
+					</div>
+
+					<div class="text-center px-6">
+						<div class="relative text-transparent">
+							<div
+								class="size-20 bg-orange-500/5 text-orange-500 rounded-xl text-2xl flex align-middle justify-center items-center mx-auto shadow-sm dark:shadow-gray-800">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+									 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+									 stroke-width="2" stroke-linecap="round"
+									 stroke-linejoin="round"
+									 class="feather feather-mail">
+									<path
+										d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+									<polyline points="22,6 12,13 2,6"></polyline>
+								</svg>
+							</div>
+						</div>
+
+						<div class="content mt-7">
+							<h5 class="title h5 text-lg font-semibold">Email</h5>
+							<p class="text-slate-400 mt-3">The phrasal sequence of the is now so
+								that
+								many campaign and benefit</p>
+
+							<div class="mt-5">
+								<a href="mailto:{{ email_id }}"
+								   class="text-orange-500 font-medium">{% if email_id %}
+									<span itemprop="email">{{ email_id }}</span>
+								{% endif %}</a>
+							</div>
+						</div>
+					</div>
+
+					<div class="text-center px-6">
+						<div class="relative text-transparent">
+							<div
+								class="size-20 bg-orange-500/5 text-orange-500 rounded-xl text-2xl flex align-middle justify-center items-center mx-auto shadow-sm dark:shadow-gray-800">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+									 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+									 stroke-width="2" stroke-linecap="round"
+									 stroke-linejoin="round"
+									 class="feather feather-map-pin">
+									<path
+										d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+									<circle cx="12" cy="10" r="3"></circle>
+								</svg>
+							</div>
+						</div>
+
+						<div class="content mt-7">
+							<h5 class="title h5 text-lg font-semibold">{{ address_title }}</h5>
+							<p class="text-slate-400 mt-3">
+								{% if address_line1 %}
+									<span itemprop="streetAddress">{{ address_line1 }}</span><br>
+								{% endif %}
+								{% if address_line2 %}
+									<span itemprop="streetAddress">{{ address_line2 }}</span><br>
+								{% endif %}
+								{% if city %}
+									<span itemprop="addressLocality">{{ city }}</span><br>
+								{% endif %}
+								{% if state %}
+									<span itemprop="addressRegion">{{ state }}</span><br>
+								{% endif %}
+								{% if pincode %}
+									<span itemprop="postalCode">{{ pincode }}</span><br>
+								{% endif %}
+								{% if country %}
+									<span itemprop="addressCountry">{{ country }}</span><br><br>
+								{% endif %} <br></p>
+
+							<div class="mt-5">
+								<a href="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d39206.002432144705!2d-95.4973981212445!3d29.709510002925988!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8640c16de81f3ca5%3A0xf43e0b60ae539ac9!2sGerald+D.+Hines+Waterwall+Park!5e0!3m2!1sen!2sin!4v1566305861440!5m2!1sen!2sin"
+								   data-type="iframe"
+								   class="video-play-icon read-more lightbox text-orange-500 font-medium">View
+									on Google map</a>
+							</div>
+						</div>
+					</div>
+				</div><!--end grid-->
+			</div><!--end container-->
+		{% endif %}
+	</section>
+	<style>
+		.address {
+			line-height: 1.7em;
+		}
+	</style>
+	<div class="contact-content">
+		{% if introduction %}
+			<div>
+				{{ introduction or "" }}<br>
+			</div>
+		{% endif %}
+		<div class="row">
+			{% if address_title %}
+				<div class="col-md-3 col-md-offset-1 address"
+					 itemscope itemtype="http://schema.org/PostalAddress">
+					<h4 style="margin-top: 0px;"><i
+						class="fa fa-map-marker"></i> {{ address_title }}</h4>
+					{% if address_line1 %}
+						<span itemprop="streetAddress">{{ address_line1 }}</span><br>
+					{% endif %}
+					{% if address_line2 %}
+						<span itemprop="streetAddress">{{ address_line2 }}</span><br>
+					{% endif %}
+					{% if city %}
+						<span itemprop="addressLocality">{{ city }}</span><br>
+					{% endif %}
+					{% if state %}
+						<span itemprop="addressRegion">{{ state }}</span><br>
+					{% endif %}
+					{% if pincode %}
+						<span itemprop="postalCode">{{ pincode }}</span><br>
+					{% endif %}
+					{% if country %}
+						<span itemprop="addressCountry">{{ country }}</span><br><br>
+					{% endif %}
+					{% if phone %}
+						<i class='fa fa-phone'></i> <span itemprop="telephone">{{ phone }}</span>
+						<br>
+					{% endif %}
+					{% if email_id %}
+						<i class='fa fa-envelope'></i>
+						<span itemprop="email">
+					<a href="mailto:{{ email_id }}">{{ email_id }}</a>
+				</span>
+						<br>
+					{% endif %}
+					{% if skype %}
+						<i class='fa fa-skype'></i> <span itemprop="email">{{ skype }}</span><br>
+					{% endif %}
+
+				</div>
+			{% endif %}
+		</div>
+	</div>
+	<script>
+		{% include "templates/includes/contact.js" %}
+	</script>
+{% endblock %}
