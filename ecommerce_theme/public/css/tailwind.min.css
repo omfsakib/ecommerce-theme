@@ -1262,6 +1262,10 @@ img, video {
 	max-height: 1.5rem !important
 }
 
+.max-h-12 {
+	max-height: 3rem !important
+}
+
 .min-h-screen {
 	min-height: 100vh !important
 }
