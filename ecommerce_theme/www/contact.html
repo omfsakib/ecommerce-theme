@@ -186,60 +186,6 @@
 			</div><!--end container-->
 		{% endif %}
 	</section>
-	<style>
-		.address {
-			line-height: 1.7em;
-		}
-	</style>
-	<div class="contact-content">
-		{% if introduction %}
-			<div>
-				{{ introduction or "" }}<br>
-			</div>
-		{% endif %}
-		<div class="row">
-			{% if address_title %}
-				<div class="col-md-3 col-md-offset-1 address"
-					 itemscope itemtype="http://schema.org/PostalAddress">
-					<h4 style="margin-top: 0px;"><i
-						class="fa fa-map-marker"></i> {{ address_title }}</h4>
-					{% if address_line1 %}
-						<span itemprop="streetAddress">{{ address_line1 }}</span><br>
-					{% endif %}
-					{% if address_line2 %}
-						<span itemprop="streetAddress">{{ address_line2 }}</span><br>
-					{% endif %}
-					{% if city %}
-						<span itemprop="addressLocality">{{ city }}</span><br>
-					{% endif %}
-					{% if state %}
-						<span itemprop="addressRegion">{{ state }}</span><br>
-					{% endif %}
-					{% if pincode %}
-						<span itemprop="postalCode">{{ pincode }}</span><br>
-					{% endif %}
-					{% if country %}
-						<span itemprop="addressCountry">{{ country }}</span><br><br>
-					{% endif %}
-					{% if phone %}
-						<i class='fa fa-phone'></i> <span itemprop="telephone">{{ phone }}</span>
-						<br>
-					{% endif %}
-					{% if email_id %}
-						<i class='fa fa-envelope'></i>
-						<span itemprop="email">
-					<a href="mailto:{{ email_id }}">{{ email_id }}</a>
-				</span>
-						<br>
-					{% endif %}
-					{% if skype %}
-						<i class='fa fa-skype'></i> <span itemprop="email">{{ skype }}</span><br>
-					{% endif %}
-
-				</div>
-			{% endif %}
-		</div>
-	</div>
 	<script>
 		{% include "templates/includes/contact.js" %}
 	</script>
