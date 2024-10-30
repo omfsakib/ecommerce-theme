@@ -104,30 +104,28 @@
 								{% for parent in parents %}
 									<li itemprop="itemListElement" itemscope
 										itemtype="http://schema.org/ListItem"
+
 										class="inline-block uppercase text-[13px] font-bold duration-500 ease-in-out hover:text-orange-500">
-										<a href="{{ url_prefix }}{{ parent.route | abs_url }}"
-										   itemprop="item">
-											<span
-												itemprop="name">{{ parent.title or parent.label or parent.name or "" }}</span>
-										</a>
-										<meta itemprop="position" content="{{ loop.index }}"/>
-									</li>
+										<a href="{{ url_prefix }}{{ parent.route | abs_url }}" itemprop="item">
+                                    <span
+										itemprop="name">{{ parent.title or parent.label or parent.name or "" }}</span>
+											<meta itemprop="position" content="{{ loop.index }}"/>
+										</a></li>
 									<li class="inline-block text-base text-slate-950 dark:text-white mx-0.5 ltr:rotate-0 rtl:rotate-180">
-										<i class="mdi mdi-chevron-right"></i>
-									</li>
+										<i
+											class="mdi mdi-chevron-right"></i></li>
 								{% endfor %}
 								<li itemprop="itemListElement" itemscope
 									itemtype="http://schema.org/ListItem"
 									class="inline-block uppercase text-[13px] font-bold text-orange-500"
 									aria-current="page">
-									<a href="{{ request.path | abs_url }}" itemprop="item">
-										<span itemprop="name">{{ _(title) }}</span>
-									</a>
-									<meta itemprop="position" content="{{ count }}"/>
+                            <span itemprop="item">
+					<span itemprop="name">{{ _(title) }}</span>
+					<meta itemprop="position" content="{{ count }}"/>
+				</span>
 								</li>
 							</ul>
 						</div>
-
 					</div><!--end container-->
 				</section><!--end section-->
 				<!-- End Hero -->
