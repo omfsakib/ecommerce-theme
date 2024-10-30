@@ -1242,6 +1242,9 @@ img, video {
 .h-\[80px\] {
 	height: 80px !important
 }
+.h-\[65px\] {
+	height: 65px !important
+}
 
 .h-auto {
 	height: auto !important
