@@ -135,11 +135,6 @@
 								{% else %}
 									{{ email_login_body() }}
 								{%- endif -%}
-								{%- if social_login -%}
-									<form class="form-signin form-login" role="form">
-										{{ email_login_body() }}
-									</form>
-								{%- endif -%}
 								<div class="text-center">
 									<p class="mb-0 text-slate-400">
 										{% if copyright %}
