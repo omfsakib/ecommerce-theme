@@ -11,12 +11,7 @@
 					   for="login_email">{{ login_label or _("Email") }}</label>
 				<input id="login_email" type="text"
 					   class="mt-3 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-100 dark:border-gray-800 focus:ring-0"
-					   placeholder="
-
-
-
-
-						   {% if login_name_placeholder %}{{ login_name_placeholder }}{% else %}{{ _('jane@example.com') }}{% endif %}"
+					   placeholder="{% if login_name_placeholder %}{{ login_name_placeholder }}{% else %}{{ _('jane@example.com') }}{% endif %}"
 					   required autofocus autocomplete="username">
 			</div>
 
