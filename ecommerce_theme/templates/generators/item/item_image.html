@@ -5,13 +5,14 @@
 				<ul class="img-select list-none">
 					{% for item in slides %}
 						<li class="p-px">
-							<a href="#" data-id="1">
+							<a href="#" data-id="{{ loop.index }}">
 								<img src="{{ item.image }}"
 									 class="shadow dark:shadow-gray-800 item-slideshow-image"
 									 alt="{{ item.heading }}">
 							</a>
 						</li>
 					{% endfor %}
+
 				</ul>
 			</li>
 			<li class="img-display shadow dark:shadow-gray-800 m-px">
