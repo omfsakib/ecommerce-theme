@@ -14,7 +14,7 @@
 	{% else %}
 		{% set url = item.url or '' %}
 		{% set url = url if url.startswith('#') else url | abs_url %}
-		<li><a href="{{ url }}" {% if item.open_in_new_tab %} target="_blank" {% endif %}
+		<li><a href='{{ url }}' {% if item.open_in_new_tab %} target="_blank" {% endif %}
 			   class="sub-menu-item">{{ _(item.label) }}</a></li>
 	{% endif %}
 {% endmacro %}
