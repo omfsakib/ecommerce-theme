@@ -19,14 +19,21 @@
 						{{ "Go to Cart" if settings.enable_checkout else "Go to Quote" }}
 					</a>
 				{% else %}
-					<button data-item-code="{{ item.item_code }}"
-							onclick="webshop.webshop.shopping_cart.update_cart({
-								item_code: '{{ item.item_code }}',
-								qty: 1
-								})"
-							class="btn-add-to-cart py-2 px-5 inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-slate-900 text-white w-full rounded-md">
-						{{ "Add to Cart" if settings.enable_checkout else "Add to Quote" }}
-					</button>
+					{% if item.has_variants == 1 %}
+						<a style="visibility: visible" href="{{ item.route or '#' }}"
+						   class="btn-explore-variants text-sm py-2 px-5 inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-slate-900 text-white w-full rounded-md">
+							Explore
+						</a>
+					{% else %}
+						<button data-item-code="{{ item.item_code }}"
+								onclick="webshop.webshop.shopping_cart.update_cart({
+									item_code: '{{ item.item_code }}',
+									qty: 1
+									})"
+								class="btn-add-to-cart py-2 px-5 text-sm inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-slate-900 text-white w-full rounded-md">
+							{{ "Add to Cart" if settings.enable_checkout else "Add to Quote" }}
+						</button>
+					{% endif %}
 				{% endif %}
 			</div>
 
@@ -52,12 +59,12 @@
 
 		<div class="mt-4">
 			<a href="/{{ item.route or '#' }}"
-			   class="hover:text-orange-500 text-lg font-medium">{{ title }}</a>
-			<div class="flex justify-between items-center mt-1">
+			   class="hover:text-orange-500 font-medium text-ellipsis lg:text-lg md:text-base text-sm">{{ title }}</a>
+			<div class="flex justify-between flex-wrap items-center mt-1">
 				{% if settings.show_price %}
-					<p>{{ product_info.formatted_price }}
+					<p class="lg:text-lg md:text-base text-xs">{{ product_info.formatted_price }}
 						{% if product_info.formatted_mrp %}
-							<del class="text-slate-400">{{ product_info.formatted_mrp }}</del>
+							<del class="text-slate-400 text-xs">{{ product_info.formatted_mrp }}</del>
 						{% endif %}
 					</p>
 				{% endif %}
@@ -68,15 +75,15 @@
 						{% set total_stars = 5 %}
 
 						{% for i in range(full_stars) %}
-							<li class="inline"><i class="mdi mdi-star"></i></li>
+							<li class="inline"><i class="mdi mdi-star  lg:text-lg md:text-base text-xs"></i></li>
 						{% endfor %}
 
 						{% if has_half_star %}
-							<li class="inline"><i class="mdi mdi-star-half"></i></li>
+							<li class="inline"><i class="mdi mdi-star-half  lg:text-lg md:text-base text-xs"></i></li>
 						{% endif %}
 
 						{% for i in range(total_stars - full_stars - (1 if has_half_star else 0) ) %}
-							<li class="inline"><i class="mdi mdi-star-outline"></i></li>
+							<li class="inline"><i class="mdi mdi-star-outline  lg:text-lg md:text-base text-xs"></i></li>
 						{% endfor %}
 					</ul>
 				{% endif %}

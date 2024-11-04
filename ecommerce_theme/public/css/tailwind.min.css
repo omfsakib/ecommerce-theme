@@ -4672,8 +4672,18 @@ html[dir=rtl] .tns-visually-hidden {
 		line-height: 1.5 !important
 	}
 }
-.flex-wrap{
+
+.flex-wrap {
 	flex-wrap: wrap;
+}
+
+.truncate {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.text-ellipsis{
+	text-overflow: ellipsis;
 }
 
 @media (min-width: 1024px) {

@@ -40,12 +40,45 @@ def get_product_info(item_code):
 	"""
 	Fetch product information including pricing and discount details.
 
+	If item_code is a template item, find the variant with the lowest price
+	and use that variant's item_code.
+
 	Args:
 		item_code (str): Code of the product
 
 	Returns:
 		dict: Contains product pricing details including discount
 	"""
+	# Check if the item is a template item (variant_of will be None if the item is a template)
+	template_item_code = frappe.db.get_value("Item", item_code, "variant_of")
+
+	if template_item_code is None:
+		# The given item_code is a template, fetch all variants
+		variant_item_codes = frappe.get_all(
+			"Item",
+			filters={"variant_of": item_code},
+			pluck="name"
+		)
+
+		lowest_price = None
+		lowest_price_variant_code = None
+
+		# Iterate through each variant to get the price
+		for variant in variant_item_codes:
+			product_info = get_product_info_for_website(variant, skip_quotation_creation=True).get(
+				"product_info"
+			)
+			if product_info and product_info.get("price"):
+				current_price = product_info["price"].get("price_list_rate", 0)
+				if lowest_price is None or current_price < lowest_price:
+					lowest_price = current_price
+					lowest_price_variant_code = variant
+
+		# Use the variant with the lowest price if found
+		if lowest_price_variant_code:
+			item_code = lowest_price_variant_code
+
+	# Fetch product info using the (possibly updated) item_code
 	product_info = get_product_info_for_website(item_code, skip_quotation_creation=True).get(
 		"product_info"
 	)
