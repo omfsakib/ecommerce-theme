@@ -58,5 +58,6 @@ def get_product_info(item_code):
 	return {}
 
 
+@frappe.whitelist(allow_guest=True)
 def get_product_reviews(web_item):
 	return get_item_reviews(web_item)

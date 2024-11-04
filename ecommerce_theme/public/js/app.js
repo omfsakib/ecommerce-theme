@@ -408,7 +408,7 @@ webshop.ProductView = class CustomProductView extends OriginalProductView {
 
 	prepare_toolbar() {
 		this.products_section.append(`
-			<div class="toolbar md:flex justify-between items-center mb-6">
+			<div class="toolbar md:flex justify-between items-center mb-6 h-8">
 			</div>
 		`);
 		this.prepare_search();
@@ -439,9 +439,9 @@ webshop.ProductView = class CustomProductView extends OriginalProductView {
 	}
 
 	prepare_product_area_wrapper(view) {
-		let class_name = view == "list" ? "grid grid-cols-1 gap-6" : "grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6";
+		let class_name = view == "list" ? "grid grid-cols-1 gap-6" : "grid lg:grid-cols-3 md:grid-cols-2 grid-cols-2 gap-6";
 		return this.products_section.append(`
-			<div id="products-${view}-area" class="${class_name} products-list" itemscope itemtype="https://schema.org/Product"></div>
+			<div id="products-${view}-area" class="${class_name} w-100 products-list" itemscope itemtype="https://schema.org/Product"></div>
 		`);
 	}
 
@@ -687,13 +687,13 @@ webshop.ProductGrid = class CustomProductGrid extends OriginalProductGrid {
 	get_primary_button(item, settings) {
 		if (item.has_variants) {
 			return `
-					<a style="visibility: visible" href="/${item.route || '#'}"  class="btn-explore-variants py-2 px-5 inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-slate-900 text-white w-full rounded-md">
+					<a style="visibility: visible" href="/${item.route || '#'}"  class="btn-explore-variants text-sm py-2 px-5 inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-slate-900 text-white w-full rounded-md">
 						${__('Explore')}
 					</a>
 			`;
 		} else if (settings.enabled && (settings.allow_items_not_in_stock || item.in_stock)) {
 			return `
-					<div id="${item.name}" class="btn-add-to-cart-list py-2 px-5 inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-slate-900 text-white w-full rounded-md
+					<div id="${item.name}" class="btn-add-to-cart-list text-sm py-2 px-5 inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-slate-900 text-white w-full rounded-md
 						${item.in_cart ? 'hidden' : ''}"
 						data-item-code="${item.item_code}"
 						style="visibility: visible">
@@ -702,7 +702,7 @@ webshop.ProductGrid = class CustomProductGrid extends OriginalProductGrid {
 
 				<a href="/cart">
 					<div id="${item.name}" class="btn-add-to-cart-list
-						 py-2 px-5 inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-slate-900 text-white w-full rounded-md
+						 py-2 px-5 inline-block text-sm font-semibold tracking-wide align-middle duration-500 text-base text-center bg-slate-900 text-white w-full rounded-md
 						${item.in_cart ? '' : 'hidden'}"
 						data-item-code="${item.item_code}"
 						style="visibility: visible">
@@ -753,14 +753,14 @@ webshop.ProductGrid = class CustomProductGrid extends OriginalProductGrid {
     `;
 		body_html += this.get_title(item, title);
 
-		body_html += `<div class="flex justify-between items-center mt-1 price-section-${item.name}">`;
+		body_html += `<div class="flex justify-between items-center mt-1 flex-wrap price-section-${item.name}">`;
 		if (item.formatted_price) {
 			body_html += this.get_price_html(item);
 		} else {
 			body_html += `<p></p>`
 		}
 		frappe.call({
-			method: "webshop.webshop.doctype.item_review.item_review.get_item_reviews", args: {
+			method: "ecommerce_theme.utils.get_product_reviews", type: "GET", args: {
 				web_item: item.name
 			}, callback: (result) => {
 				if (result.message) {
@@ -777,17 +777,17 @@ webshop.ProductGrid = class CustomProductGrid extends OriginalProductGrid {
 
 					// Full stars
 					for (let i = 0; i < full_stars; i++) {
-						stars_html += `<li class="inline"><i class="mdi mdi-star text-lg"></i></li>`;
+						stars_html += `<li class="inline"><i class="mdi mdi-star lg:text-lg md:text-base text-xs"></i></li>`;
 					}
 
 					// Half star
 					if (has_half_star) {
-						stars_html += `<li class="inline"><i class="mdi mdi-star-half text-lg"></i></li>`;
+						stars_html += `<li class="inline"><i class="mdi mdi-star-half lg:text-lg md:text-base text-xs"></i></li>`;
 					}
 
 					// Empty stars
 					for (let i = 0; i < total_stars - full_stars - (has_half_star ? 1 : 0); i++) {
-						stars_html += `<li class="inline"><i class="mdi mdi-star-outline text-lg"></i></li>`;
+						stars_html += `<li class="inline"><i class="mdi mdi-star-outline lg:text-lg md:text-base text-xs"></i></li>`;
 					}
 
 					// Append rating and review count
@@ -803,7 +803,7 @@ webshop.ProductGrid = class CustomProductGrid extends OriginalProductGrid {
 
 	get_title(item, title) {
 		let title_html = `
-			<a href="/${item.route || '#'}" class="hover:text-orange-500 text-lg font-medium"  itemprop="name">
+			<a href="/${item.route || '#'}" class="hover:text-orange-500 lg:text-lg md:text-base text-sm font-medium"  itemprop="name">
 				${title || ''}
 			</a>
 		`;
@@ -812,13 +812,13 @@ webshop.ProductGrid = class CustomProductGrid extends OriginalProductGrid {
 
 	get_price_html(item) {
 		let price_html = `
-			<p itemprop="offers" itemscope itemtype="https://schema.org/AggregateOffer">
+			<p itemprop="offers" itemscope itemtype="https://schema.org/AggregateOffer" class="lg:text-lg md:text-base text-xs">
 				${item.formatted_price || ''}
 		`;
 
 		if (item.formatted_mrp) {
 			price_html += `
-					<del class="text-slate-400">${item.formatted_mrp ? item.formatted_mrp.replace(/ +/g, "") : ""}</del>
+					<del class="text-slate-400 text-xs">${item.formatted_mrp ? item.formatted_mrp.replace(/ +/g, "") : ""}</del>
 
 			`;
 		}
