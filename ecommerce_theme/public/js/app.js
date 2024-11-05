@@ -406,6 +406,61 @@ webshop.ProductView = class CustomProductView extends OriginalProductView {
 		super(options);
 	}
 
+	get_item_filter_data(from_filters=false) {
+		// Get and render all Product related views
+		let me = this;
+		this.from_filters = from_filters;
+		let args = this.get_query_filters();
+
+		this.disable_view_toggler(true);
+
+		frappe.call({
+			method: "ecommerce_theme.utils.get_product_filter_data",
+			args: {
+				query_args: args
+			},
+			callback: function(result) {
+				if (!result || result.exc || !result.message || result.message.exc) {
+					me.render_no_products_section(true);
+				} else {
+					// Sub Category results are independent of Items
+					if (me.item_group && result.message["sub_categories"].length) {
+						me.render_item_sub_categories(result.message["sub_categories"]);
+					}
+
+					if (!result.message["items"].length) {
+						// if result has no items or result is empty
+						me.render_no_products_section();
+					} else {
+						// Add discount filters
+						me.re_render_discount_filters(result.message["filters"].discount_filters);
+
+						// Render views
+						me.render_list_view(result.message["items"], result.message["settings"]);
+						me.render_grid_view(result.message["items"], result.message["settings"]);
+
+						me.products = result.message["items"];
+						me.product_count = result.message["items_count"];
+					}
+
+					// Bind filter actions
+					if (!from_filters) {
+						// If `get_product_filter_data` was triggered after checking a filter,
+						// don't touch filters unnecessarily, only data must change
+						// filter persistence is handle on filter change event
+						me.bind_filters();
+						me.restore_filters_state();
+					}
+
+					// Bottom paging
+					me.add_paging_section(result.message["settings"]);
+				}
+
+				me.disable_view_toggler(false);
+			}
+		});
+	}
+
 	prepare_toolbar() {
 		this.products_section.append(`
 			<div class="toolbar md:flex justify-between items-center mb-6 h-8">
