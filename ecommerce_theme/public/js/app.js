@@ -463,7 +463,7 @@ webshop.ProductView = class CustomProductView extends OriginalProductView {
 
 	prepare_toolbar() {
 		this.products_section.append(`
-			<div class="toolbar md:flex justify-between items-center mb-6 h-8">
+			<div class="toolbar flex justify-between items-center mb-6 h-8">
 			</div>
 		`);
 		this.prepare_search();
@@ -472,7 +472,8 @@ webshop.ProductView = class CustomProductView extends OriginalProductView {
 
 	prepare_search() {
 		$(".toolbar").append(`
-			<span class="font-semibold"></span>
+			<span class="py-1 px-2 font-medium tracking-wide align-middle duration-500 text-base text-center bg-orange-500/10 text-orange-500 rounded-md me-2 mt-2 md:hidden block show-filter">Show Filter</span>
+			<span class="font-semibold md:block hidden"></span>
 		`);
 	}
 
@@ -485,7 +486,7 @@ webshop.ProductView = class CustomProductView extends OriginalProductView {
 
 			$(".toggle-container").append(`
             <div class="py-1 px-2 inline-block font-medium tracking-wide align-middle duration-500 text-base text-center bg-orange-500/10 text-orange-500 rounded-md me-2 mt-2 flex items-center" id="toggle-view">
-                <button id="${icon}" class="btn ${view} mr-2">
+                <button id="${icon}" class="btn ${view}">
                     ${svgIcon}
                 </button>
             </div>
@@ -935,5 +936,23 @@ frappe.ready(function () {
 		wishlist.bind_move_to_cart_action();
 		wishlist.bind_remove_action();
 	}
-
+	$('.show-filter').onclick('')
 });
+
+$(document).ready(function() {
+    $('.show-filter').on('click', function() {
+        // Toggle the 'hidden' class on the #filter-section
+        $('#filter-section').toggleClass('hidden');
+
+        // Check if the #filter-section is visible (i.e., 'hidden' class is removed)
+        if ($('#filter-section').hasClass('hidden')) {
+            // If the filter section is hidden, change the button text to 'Show Filters'
+            $(this).text('Show Filters');
+        } else {
+            // If the filter section is visible, change the button text to 'Hide Filters'
+            $(this).text('Hide Filters');
+        }
+    });
+});
+
+

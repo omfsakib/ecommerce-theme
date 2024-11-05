@@ -9,12 +9,12 @@
 {% endblock header %}
 
 {% block page_content %}
-	<section class="page_content relative md:py-24 py-16">
+	<section class="page_content relative md:py-24 py-4">
 		<div class="container relative">
 			<div class="grid md:grid-cols-12 sm:grid-cols-2 grid-cols-1 gap-6">
 
 				<!-- Filters Section -->
-				<div class="lg:col-span-3 md:col-span-4">
+				<div id="filter-section" class="lg:col-span-3 md:col-span-4 hidden md:block">
 					<div class="rounded shadow dark:shadow-gray-800 p-4 sticky top-20">
 						<div class="flex justify-between items-center">
 							<h5 class="text-xl font-medium">{{ _('Filters') }}</h5>
