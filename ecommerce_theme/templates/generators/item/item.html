@@ -139,6 +139,8 @@
 				</div>
 			</div><!--end grid-->
 		</div><!--end container-->
+
+		{% set show_recommended_items = recommended_items and shopping_cart.cart_settings.enable_recommendations %}
 		{% if show_recommended_items %}
 			{% from 'templates/includes/item_card.html' import product_card %}
 			{% set settings = get_webshop_settings() %}
@@ -150,7 +152,7 @@
 				<div
 					class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 pt-6">
 					{% for item in recommended_items %}
-						{{ product_card(item) }}
+						{{ product_card(item, settings, cart_products) }}
 					{% endfor %}
 				</div>
 			</div>

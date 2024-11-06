@@ -1,15 +1,15 @@
 {% macro product_card(item, settings, cart_products) %}
 	{%- set title = item.web_item_name or item.item_name or item.item_code -%}
 	{%- set title = title[:50] + "..." if title|len > 50 else title -%}
-	{%- set image = item.website_image -%}
+	{%- set image = item.website_image or item.website_item_thumbnail -%}
 	{%- set description = item.website_description or item.description -%}
 	{%- set product_info = get_product_info(item.item_code) -%}
 	{%- set product_reviews = get_product_reviews(item.name) -%}
 
-	<div class="group">
+	<div class="group" itemscope itemtype="http://schema.org/Product">
 		<div
 			class="relative overflow-hidden shadow dark:shadow-gray-800 group-hover:shadow-lg group-hover:dark:shadow-gray-800 rounded-md duration-500">
-			<img src="{{ image }}"
+			<img src="{{ image }}" itemprop="image"
 				 class="group-hover:scale-110 duration-500" alt="{{ title }}">
 
 			<div class="absolute -bottom-20 group-hover:bottom-3 start-3 end-3 duration-500">
@@ -51,39 +51,57 @@
 			{% if product_info.discount_percent %}
 				<ul class="list-none absolute top-[10px] start-4">
 					<li><a href="javascript:void(0)"
-						   class="bg-orange-600 text-white text-[10px] font-bold px-2.5 py-0.5 rounded h-5">{{ product_info.discount_percent }}%
-						Off</a></li>
+						   class="bg-orange-600 text-white text-[10px] font-bold px-2.5 py-0.5 rounded h-5"><span
+						itemprop="discount">{{ product_info.discount_percent }}%</span> Off</a>
+					</li>
 				</ul>
 			{% endif %}
 		</div>
 
 		<div class="mt-4">
-			<a href="/{{ item.route or '#' }}"
+			<a href="/{{ item.route or '#' }}" itemprop="name"
 			   class="hover:text-orange-500 font-medium text-ellipsis lg:text-lg md:text-base text-sm">{{ title }}</a>
 			<div class="flex justify-between flex-wrap items-center mt-1">
 				{% if settings.show_price %}
-					<p class="lg:text-lg md:text-base text-xs">{{ product_info.formatted_price }}
+					<p class="lg:text-lg md:text-base text-xs" itemprop="offers" itemscope
+					   itemtype="http://schema.org/Offer">
+						<span itemprop="price">{{ product_info.formatted_price }}</span>
+						<meta itemprop="priceCurrency" content="USD">
+						<!-- Adjust the currency accordingly -->
 						{% if product_info.formatted_mrp %}
-							<del class="text-slate-400 text-xs">{{ product_info.formatted_mrp }}</del>
+							<del class="text-slate-400 text-xs" itemprop="price"
+								 content="{{ product_info.formatted_mrp }}">
+								{{ product_info.formatted_mrp }}
+							</del>
 						{% endif %}
 					</p>
 				{% endif %}
 				{% if product_reviews.average_rating %}
-					<ul class="font-medium text-amber-400 list-none">
+					<ul class="font-medium text-amber-400 list-none" itemprop="aggregateRating"
+						itemscope itemtype="http://schema.org/AggregateRating">
+						<meta itemprop="ratingValue"
+							  content="{{ product_reviews.average_rating }}">
+						<meta itemprop="reviewCount"
+							  content="{{ product_reviews.review_count or 0 }}">
 						{% set full_stars = product_reviews.average_rating|int %}
 						{% set has_half_star = (product_reviews.average_rating - full_stars) >= 0.5 %}
 						{% set total_stars = 5 %}
 
 						{% for i in range(full_stars) %}
-							<li class="inline"><i class="mdi mdi-star  lg:text-lg md:text-base text-xs"></i></li>
+							<li class="inline"><i
+								class="mdi mdi-star  lg:text-lg md:text-base text-xs"></i></li>
 						{% endfor %}
 
 						{% if has_half_star %}
-							<li class="inline"><i class="mdi mdi-star-half  lg:text-lg md:text-base text-xs"></i></li>
+							<li class="inline"><i
+								class="mdi mdi-star-half  lg:text-lg md:text-base text-xs"></i>
+							</li>
 						{% endif %}
 
 						{% for i in range(total_stars - full_stars - (1 if has_half_star else 0) ) %}
-							<li class="inline"><i class="mdi mdi-star-outline  lg:text-lg md:text-base text-xs"></i></li>
+							<li class="inline"><i
+								class="mdi mdi-star-outline  lg:text-lg md:text-base text-xs"></i>
+							</li>
 						{% endfor %}
 					</ul>
 				{% endif %}
