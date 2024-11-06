@@ -6,6 +6,7 @@
 	{%- set product_info = get_product_info(item.item_code) -%}
 	{%- set product_reviews = get_product_reviews(item.name) -%}
 
+
 	<div class="group" itemscope itemtype="http://schema.org/Product">
 		<div
 			class="relative overflow-hidden shadow dark:shadow-gray-800 group-hover:shadow-lg group-hover:dark:shadow-gray-800 rounded-md duration-500">
@@ -19,7 +20,7 @@
 						{{ "Go to Cart" if settings.enable_checkout else "Go to Quote" }}
 					</a>
 				{% else %}
-					{% if item.has_variants == 1 %}
+					{% if item.has_variants == 1 or item.price_info == None %}
 						<a style="visibility: visible" href="{{ item.route or '#' }}"
 						   class="btn-explore-variants text-sm py-2 px-5 inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-slate-900 text-white w-full rounded-md">
 							Explore
