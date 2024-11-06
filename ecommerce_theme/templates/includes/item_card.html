@@ -4,8 +4,7 @@
 	{%- set image = item.website_image or item.website_item_thumbnail -%}
 	{%- set description = item.website_description or item.description -%}
 	{%- set product_info = get_product_info(item.item_code) -%}
-	{%- set product_reviews = get_product_reviews(item.name) -%}
-
+	{%- set product_reviews = get_product_reviews(item.name or frappe.db.get_value('Website Item', {'item_code': item.item_code}, 'name')) -%}
 
 	<div class="group" itemscope itemtype="http://schema.org/Product">
 		<div
@@ -77,7 +76,7 @@
 						{% endif %}
 					</p>
 				{% endif %}
-				{% if product_reviews.average_rating %}
+				{% if product_reviews %}
 					<ul class="font-medium text-amber-400 list-none" itemprop="aggregateRating"
 						itemscope itemtype="http://schema.org/AggregateRating">
 						<meta itemprop="ratingValue"
