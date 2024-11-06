@@ -936,7 +936,6 @@ frappe.ready(function () {
 		wishlist.bind_move_to_cart_action();
 		wishlist.bind_remove_action();
 	}
-	$('.show-filter').onclick('')
 });
 
 $(document).ready(function() {

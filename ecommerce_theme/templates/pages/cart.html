@@ -110,28 +110,6 @@
 
 					<div class="grid lg:grid-cols-12 md:grid-cols-2 grid-cols-1 mt-6 gap-6">
 						<div class="lg:col-span-8 md:order-1 order-3">
-							<div class="space-x-1">
-								{% if cart_settings.enable_checkout %}
-									<a class="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center bg-orange-500 text-white rounded-md mt-2"
-									   href="/me">
-										{{ _('Past Orders') }}
-									</a>
-								{% else %}
-									<a class="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center bg-orange-500 text-white rounded-md mt-2"
-									   href="/me">
-										{{ _('Past Quotes') }}
-									</a>
-								{% endif %}
-								{% if doc.items %}
-									<a class="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white mt-2"
-									   href="/all-products">
-										{{ _('Continue Shopping') }}
-									</a>
-								{% endif %}
-							</div>
-						</div>
-
-						<div class="lg:col-span-4 md:order-2 order-1">
 							<ul class="list-none shadow dark:shadow-gray-800 rounded-md">
 
 								<!-- Apply Coupon Code  -->
@@ -262,6 +240,28 @@
 								{% endfor %}</div>
 								</li>
 							</ul>
+						</div>
+
+						<div class="lg:col-span-4 md:order-2 order-1">
+							<div class="space-y-1">
+								{% if cart_settings.enable_checkout %}
+									<a class="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center bg-orange-500 text-white rounded-md mt-2"
+									   href="/me">
+										{{ _('Past Orders') }}
+									</a>
+								{% else %}
+									<a class="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center bg-orange-500 text-white rounded-md mt-2"
+									   href="/me">
+										{{ _('Past Quotes') }}
+									</a>
+								{% endif %}
+								{% if doc.items %}
+									<a class="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white mt-2"
+									   href="/all-products">
+										{{ _('Continue Shopping') }}
+									</a>
+								{% endif %}
+							</div>
 						</div>
 					</div>
 
