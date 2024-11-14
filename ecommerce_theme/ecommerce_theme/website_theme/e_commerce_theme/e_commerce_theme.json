@@ -7,13 +7,30 @@
  "docstatus": 0,
  "doctype": "Website Theme",
  "font_properties": "wght@300;400;500;600;700;800",
- "idx": 0,
- "modified": "2024-10-14 14:48:57.436869",
+ "idx": 8,
+ "ignored_apps": [
+  {
+   "app": "ecommerce_theme"
+  },
+  {
+   "app": "frappe"
+  },
+  {
+   "app": "erpnext"
+  },
+  {
+   "app": "payments"
+  },
+  {
+   "app": "webshop"
+  }
+ ],
+ "modified": "2024-11-06 16:23:23.066745",
  "modified_by": "Administrator",
  "module": "Ecommerce Theme",
  "name": "E-commerce Theme",
  "owner": "Administrator",
  "theme": "E-commerce Theme",
  "theme_scss": "$enable-shadows: false;\n$enable-gradients: false;\n$enable-rounded: true;\n\n// Bootstrap Variable Overrides\n\n\n// Import themes from installed apps\n\n\n\n// Custom Theme\n\n\n:root {\n\t}\n",
- "theme_url": "/assets/e_commerce_theme/css/e_commerce_theme_style.css"
+ "theme_url": "/files/website_theme/e_commerce_theme_style.css"
 }

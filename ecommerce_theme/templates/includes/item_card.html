@@ -65,8 +65,9 @@
 				{% if settings.show_price %}
 					<p class="lg:text-lg md:text-base text-xs" itemprop="offers" itemscope
 					   itemtype="http://schema.org/Offer">
-						<span itemprop="price">{{ product_info.formatted_price }}</span>
-						<meta itemprop="priceCurrency" content="USD">
+						<span class="hidden" itemprop="price">{{ product_info.price_list_rate }}</span>
+						<span>{{ product_info.formatted_price }}</span>
+						<meta itemprop="priceCurrency" content="BDT">
 						<!-- Adjust the currency accordingly -->
 						{% if product_info.formatted_mrp %}
 							<del class="text-slate-400 text-xs" itemprop="price"
