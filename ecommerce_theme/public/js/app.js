@@ -859,7 +859,8 @@ webshop.ProductGrid = class CustomProductGrid extends OriginalProductGrid {
 
 	get_title(item, title) {
 		let title_html = `
-			<a href="/${item.route || '#'}" class="hover:text-orange-500 lg:text-lg md:text-base text-sm font-medium"  itemprop="name">
+			<span class="hidden" itemprop="name">${title || ''}</span>
+			<a href="/${item.route || '#'}" class="hover:text-orange-500 lg:text-lg md:text-base text-sm font-medium">
 				${title || ''}
 			</a>
 		`;
