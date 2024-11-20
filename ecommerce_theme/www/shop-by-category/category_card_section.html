@@ -1,5 +1,5 @@
 {%- macro card(title, image,type, url=None, text_primary=False) -%}
-	<a href='{{ url or '#' }}' class="text-center hover:text-orange-500">
+	<a href='{{ url or '#' }}' class="text-center hover:text-orange-500 category-card"  data-type="{{ type }}" data-name="{{ title }}">
 		<img src="{{ image }}"
 			 class="rounded-full shadow dark:shadow-gray-800" alt="{{ title }}">
 		<span class="text-xl font-medium mt-3 block">{{ title }}</span>

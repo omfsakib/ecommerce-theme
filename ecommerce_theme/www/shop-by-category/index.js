@@ -6,6 +6,7 @@ $(() => {
 		if (category_type != "item_group") {
 			let filters = {};
 			filters[category_type] =  [category_name];
+			console.log(filters);
 			window.location.href = "/all-products?field_filters=" + JSON.stringify(filters);
 		}
 	});
