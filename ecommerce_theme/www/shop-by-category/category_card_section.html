@@ -1,0 +1,19 @@
+{%- macro card(title, image,type, url=None, text_primary=False) -%}
+	<a href='{{ url or '#' }}' class="text-center hover:text-orange-500">
+		<img src="{{ image }}"
+			 class="rounded-full shadow dark:shadow-gray-800" alt="{{ title }}">
+		<span class="text-xl font-medium mt-3 block">{{ title }}</span>
+	</a>
+{%- endmacro -%}
+
+<div class="container relative">
+	<div class="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 grid-cols-2 pt-6 gap-6">
+		{%- for row in data -%}
+			{%- set title = row.name -%}
+			{%- set image = row.get("image") -%}
+			{%- if title -%}
+				{{ card(title, image, type, row.get("route")) }}
+			{%- endif -%}
+		{%- endfor -%}
+	</div><!--end grid-->
+</div><!--end container-->

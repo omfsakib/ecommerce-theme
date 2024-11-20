@@ -1,0 +1,44 @@
+{% set ns = namespace(tabs=[]) %}
+{%- for index in ['1', '2', '3', '4', '5', '6'] -%}
+
+	{%- set buttonid = 'id-' + frappe.utils.generate_hash(length=12) -%}
+	{%- set panelid = 'id-' + frappe.utils.generate_hash(length=12) -%}
+
+	{%- set tab = {
+		'title': values['tab_' + index + '_title'],
+		'content': values['tab_' + index + '_content'],
+		'buttonid': buttonid,
+		'panelid': panelid, } -%}
+
+	{%- if tab.title and tab.content -%}
+		{%- set ns.tabs = ns.tabs + [tab] -%}
+	{%- endif -%}
+
+{%- endfor -%}
+
+<div class="mb-4 border-b border-gray-200 dark:border-gray-700 mt-6">
+	<ul class="flex flex-wrap -mb-px text-sm font-medium text-center pb-4" id="default-tab"
+		data-tabs-toggle="#default-tab-content" role="tablist">
+		{%- for tab in ns.tabs -%}
+			{%- set first_tab = true if loop.index0 == 0 else false -%}
+			<li class="me-2" role="presentation">
+				<button class="inline-block p-4 border-b-2 rounded-lg" id="{{ tab.buttonid }}"
+						data-tabs-target="#{{ tab.panelid }}" type="button" role="tab"
+						aria-controls="{{ tab.panelid }}"
+						aria-selected="{{ 'true' if first_tab else 'false' }}">{{ tab.title }}
+				</button>
+			</li>
+		{% endfor %}
+	</ul>
+</div>
+<div id="default-tab-content" class=" mb-6">
+	{%- for tab in ns.tabs -%}
+		{%- set first_tab = true if loop.index0 == 0 else false -%}
+		<div class="{{ 'hidden' if first_tab else '' }} p-4 rounded-lg bg-gray-50 dark:bg-gray-800"
+			 id="{{ tab.panelid }}"
+			 role="tabpanel"
+			 aria-labelledby="{{ tab.buttonid }}">
+			{{ frappe.utils.md_to_html(tab.content) }}
+		</div>
+	{% endfor %}
+</div>

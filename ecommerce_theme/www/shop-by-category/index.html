@@ -1,0 +1,36 @@
+{% extends "templates/web.html" %}
+{% block title %}{{ _('Shop by Category') }}{% endblock %}
+
+
+{% block script %}
+<script type="text/javascript" src="/shop-by-category/index.js"></script>
+{% endblock %}
+
+{% block page_content %}
+<div class="shop-by-category-content container">
+	<div class="category-slideshow">
+		{% if slideshow %}
+		<!-- slideshow -->
+			{{ web_block(
+				"Hero Slider",
+				values=slideshow,
+				add_container=0,
+				add_top_padding=0,
+				add_bottom_padding=0,
+			) }}
+		{% endif %}
+	</div>
+	<div class="category-tabs">
+		{% if tabs %}
+		<!-- tabs -->
+			{{ web_block(
+				"Section with Ecommerce Tabs",
+				values=tabs,
+				add_container=0,
+				add_top_padding=0,
+				add_bottom_padding=0
+			) }}
+		{% endif %}
+	</div>
+</div>
+{% endblock %}

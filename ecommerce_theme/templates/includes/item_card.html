@@ -20,7 +20,7 @@
 					</a>
 				{% else %}
 					{% if item.has_variants == 1 or item.price_info == None %}
-						<a style="visibility: visible" href="{{ item.route or '#' }}"
+						<a style="visibility: visible" href="/{{ item.route or '#' }}"
 						   class="btn-explore-variants text-sm py-2 px-5 inline-block font-semibold tracking-wide align-middle duration-500 text-base text-center bg-slate-900 text-white w-full rounded-md">
 							Explore
 						</a>
