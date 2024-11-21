@@ -28,12 +28,20 @@
 		<!-- Logo container-->
 		<a class="logo" href="{{ url_prefix }}{{ home_page or "/" }}">
 			<div>
-				<img src="{{ navbar_template_values['logo_dark'] }}"
-					 class="h-[22px] inline-block dark:hidden"
-					 alt="">
-				<img src="{{ navbar_template_values['logo_light'] }}"
-					 class="h-[22px] hidden dark:inline-block"
-					 alt="">
+				{% if navbar_template_values %}
+					<img src="{{ navbar_template_values['logo_dark'] }}"
+						 class="h-[22px] inline-block dark:hidden"
+						 alt="">
+					<img src="{{ navbar_template_values['logo_light'] }}"
+						 class="h-[22px] hidden dark:inline-block"
+						 alt="">
+				{%- elif brand_html -%}
+						{{ brand_html }}
+				{%- elif banner_image -%}
+					<img src='{{ banner_image }}' class="h-[22px] hidden dark:inline-block">
+				{%- else -%}
+					<span>{{ (frappe.get_hooks("brand_html") or [_("Home")])[0] }}</span>
+				{%- endif -%}
 			</div>
 		</a>
 		<!-- End Logo container-->
