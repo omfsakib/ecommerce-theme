@@ -1,0 +1,418 @@
+{% extends "templates/web.html" %}
+{% from "webshop/templates/includes/order/order_macros.html" import item_name_and_description %}
+
+{% block title %}
+	{{ doc.name }}
+{% endblock %}
+
+
+{% block header_actions %}
+	<div class="row">
+		<div class="dropdown">
+			<button class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown"
+					aria-expanded="false">
+				<span class="font-md">{{ _('Actions') }}</span>
+				<b class="caret"></b>
+			</button>
+			<ul class="dropdown-menu dropdown-menu-right" role="menu">
+				{% if doc.doctype == 'Purchase Order' and show_make_pi_button %}
+					<a class="dropdown-item"
+					   href="/api/method/erpnext.buying.doctype.purchase_order.purchase_order.make_purchase_invoice_from_portal?purchase_order_name={{ doc.name }}"
+					   data-action="make_purchase_invoice">{{ _("Make Purchase Invoice") }}
+					</a>
+				{% endif %}
+				<a class="dropdown-item"
+				   href='/printview?doctype={{ doc.doctype }}&name={{ doc.name }}&format={{ print_format }}'
+				   target="_blank"
+				   rel="noopener noreferrer">
+					{{ _("Print") }}
+				</a>
+			</ul>
+		</div>
+		<div class="form-column col-sm-6">
+			<div class="page-header-actions-block" data-html-block="header-actions">
+				<p>
+					{% if doc.doctype != "Sales Invoice" or doc.outstanding_amount > 0 %}
+						<a href="/api/method/erpnext.accounts.doctype.payment_request.payment_request.make_payment_request?dn={{ doc.name }}&dt={{ doc.doctype }}&submit_doc=1&order_type=Shopping Cart"
+						   class="btn btn-primary btn-sm" id="pay-for-order">
+							{{ _("Pay") }} {{ doc.get_formatted("grand_total") }}
+						</a>
+					{% endif %}
+				</p>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block page_content %}
+
+	<div class="container flex space-x-2 justify-end items-end">
+		<div class="dropdown">
+			<button data-dropdown-toggle="dropdown"
+					class="dropdown-toggle items-center btn btn-primary"
+					type="button">
+				<span class="font-md">{{ _('Actions') }}</span>
+				<b class="caret"></b>
+			</button>
+
+			<div
+				class="dropdown-menu absolute end-0 m-0 mt-4 z-10 w-48 rounded-md overflow-hidden bg-white dark:bg-slate-900 shadow dark:shadow-gray-700 hidden"
+				onclick="event.stopPropagation();">
+				<ul class="py-2 text-start">
+					{% if doc.doctype == 'Purchase Order' and show_make_pi_button %}
+						<a class="dropdown-item ms-2"
+						   href="/api/method/erpnext.buying.doctype.purchase_order.purchase_order.make_purchase_invoice_from_portal?purchase_order_name={{ doc.name }}"
+						   data-action="make_purchase_invoice">{{ _("Make Purchase Invoice") }}
+						</a>
+					{% endif %}
+					<a class="dropdown-item ms-2"
+					   href='/printview?doctype={{ doc.doctype }}&name={{ doc.name }}&format={{ print_format }}'
+					   target="_blank"
+					   rel="noopener noreferrer">
+						{{ _("Print") }}
+					</a>
+				</ul>
+			</div>
+		</div>
+		<div class="">
+			<div class="page-header-actions-block" data-html-block="header-actions">
+				<p>
+					{% if doc.doctype != "Sales Invoice" or doc.outstanding_amount > 0 %}
+						<a href="/api/method/erpnext.accounts.doctype.payment_request.payment_request.make_payment_request?dn={{ doc.name }}&dt={{ doc.doctype }}&submit_doc=1&order_type=Shopping Cart"
+						   class="btn btn-primary" id="pay-for-order">
+							{{ _("Pay") }} {{ doc.get_formatted("grand_total") }}
+						</a>
+					{% endif %}
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="main" id="memo" style="display: flex; justify-content:center;">
+		<div class="row" style="overflow: auto;">
+			<div class="col-sm-12">
+				<div class="memo-template">
+					<style>
+						.row {
+							margin-right: -15px;
+							margin-left: -15px;
+						}
+
+						/* Hide scrollbar for Chrome, Safari and Opera */
+						.row::-webkit-scrollbar {
+							display: none;
+						}
+
+						/* Hide scrollbar for IE, Edge and Firefox */
+						.row {
+							-ms-overflow-style: none; /* IE and Edge */
+							scrollbar-width: none; /* Firefox */
+						}
+
+						.memo-template {
+							border: 1px solid #ddd;
+							padding: 30px;
+							margin: 20px;
+							width: 685px;
+							position: relative;
+						}
+
+						.memo-template::before {
+							content: "";
+							width: 760px;
+							position: absolute;
+							top: 0px;
+							right: 0px;
+							bottom: 70px;
+							left: 0px;
+							background-image: url('/assets/erpnext/images/favicon.png');
+							background-position: center;
+							background-repeat: no-repeat;
+							opacity: 0.1;
+							z-index: 1;
+						}
+
+						.print-format .table-bordered {
+							border: 1px solid #ddd;
+						}
+
+						.print-format .table-bordered td, .print-format .table-bordered th {
+							border: 1px solid #ddd;
+						}
+
+						.customer_info .customer_details,
+						.customer_info .billing_details,
+						.order_info .order_details,
+						.heading .logo {
+							display: flex;
+							justify-content: space-between;
+						}
+
+						.heading .logo img {
+							max-height: 50px;
+							align-self: flex-start;
+						}
+
+						.heading .content {
+							font-size: 12px;
+						}
+
+						.customer_info .customer_details {
+							display: flex;
+							flex-wrap: wrap;
+							align-content: space-between;
+						}
+
+						.amountinWords span,
+						.customer_info .billing_details span,
+						.customer_info .customer_details span {
+							border-bottom: 2px dotted #ddd;
+						}
+
+						.table-bordered > tbody > tr > td {
+							border: none;
+						}
+
+						.signatures {
+							display: flex;
+							justify-content: space-between;
+						}
+
+						.signatures .customer_signature p:first-child,
+						.signatures .admin_signature img {
+							height: 40px;
+							border-bottom: 2px dotted #ddd;
+						}
+
+						.text-center {
+							text-align: center;
+						}
+
+						.text-right {
+							text-align: right;
+						}
+
+						.text-left {
+							text-align: left;
+						}
+
+						.table-responsive {
+							min-height: .01%;
+							overflow-x: auto;
+						}
+
+						.table-bordered {
+							border: 1px solid #ddd;
+						}
+
+						.table {
+							width: 100%;
+							max-width: 100%;
+							margin-bottom: 20px;
+						}
+
+						table {
+							background-color: transparent;
+						}
+
+						table {
+							border-spacing: 0;
+							border-collapse: collapse;
+						}
+
+						.table > thead:first-child > tr:first-child > td {
+							border-top: 0;
+						}
+
+						.table-bordered > thead > tr > td {
+							border-bottom-width: 2px;
+						}
+
+						.table-bordered > thead > tr > td {
+							border: 1px solid #ddd;
+						}
+
+						.table > tbody > tr > td,
+						.table > thead > tr > td {
+							padding: 8px;
+							line-height: 1.42857143;
+							vertical-align: top;
+						}
+
+						.table > thead > tr > td {
+							font-weight: 700;
+						}
+
+						h2 {
+							font-size: 27px;
+						}
+
+						h1, h2, h3, h4, h5, h6 {
+							color: #292929;
+							line-height: 1;
+							text-transform: uppercase;
+						}
+
+						.h2, h2 {
+							font-size: 30px;
+						}
+
+						.h1, .h2, .h3, h1, h2, h3 {
+							margin-top: 20px;
+							margin-bottom: 10px;
+						}
+
+						.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+							font-family: inherit;
+							font-weight: 500;
+							line-height: 1.1;
+						}
+
+						p {
+							margin: 0 0 10px;
+						}
+					</style>
+					<div class="heading">
+						<div class="logo">
+							<img src="/files/Logo-Light.png" alt="H A S H T A G">
+							<div class="content text-center">
+								<h2>StayhasHtag</h2>
+								<p>House-36/1, Block-A, Lane-2, Mirpur-6, Dhaka-1216</p>
+								<p>Mobile: +8801833371699, E-Mail: stayhashtag@gmail.com</p>
+							</div>
+							<img src="/assets/erpnext/images/favicon.png" alt="H A S H T A G">
+						</div>
+					</div>
+					<div class="order_info">
+						<div class="order_details">
+							<p>Memo No: {{ doc.name }}</p>
+							<p>
+								Date: {{ frappe.utils.get_datetime(doc.creation).strftime('%d %b, %Y') }}</p>
+						</div>
+					</div>
+					<div class="customer_info">
+						<div class="customer_details">
+							{% if doc.customer_name %}
+								<p>Name : <span>{{ doc.customer_name }}</span></p>
+							{% endif %}
+							{% if doc.contact_email %}
+								<p>E-mail : <span>{{ doc.contact_email }}</span></p>
+							{% endif %}
+							{% if doc.contact_mobile %}
+								<p>Telephone : <span>{{ doc.contact_mobile }}</span></p>
+							{% endif %}
+						</div>
+						<div class="billing_details">
+							{% if doc.address_display %}
+								<p>Shipping address : <span>{{ doc.address_display }}</span></p>
+							{% endif %}
+							<p>Status : <span>{{ doc.status }}</span></p>
+						</div>
+					</div>
+					<br>
+					<div class="orderitem_info">
+						<div class="table-responsive">
+							<table class="table table-bordered">
+								<thead>
+								<tr>
+									<td class="text-left">Product Name</td>
+									<td class="text-center">Price</td>
+									<td class="text-center">Qty</td>
+									<td class="text-center">Total</td>
+								</tr>
+								</thead>
+								<tbody>
+								{% for order in doc.items %}
+									<tr>
+										<td class="text-left">{{ order.item_name }}</td>
+										<td class="text-center">{{ order.rate }}&#2547;</td>
+										<td class="text-center">{{ order.qty }}</td>
+										<td class="text-right">{{ order.amount }}&#2547;</td>
+									</tr>
+								{% endfor %}
+								<tr>
+									<td colspan="3" class="text-right">Subtotal :</td>
+									<td class="text-right">{{ doc.total }}&#2547;</td>
+								</tr>
+								{% if doc.discount_amount < 0 %}
+									<tr>
+										<td colspan="3" class="text-right">Discount :</td>
+										<td class="text-right">{{ doc.discount_amount }}&#2547;</td>
+									</tr>
+								{% endif %}
+								<tr>
+									<td colspan="3" class="text-right">Delivery & Other Charges :
+									</td>
+									<td class="text-right">{{ doc.total_taxes_and_charges }}&#2547;</td>
+								</tr>
+								<tr>
+									<td colspan="3" class="text-right">
+										Total<span>(With Charges)</span> :
+									</td>
+									<td class="text-right"><span
+										id="total_amount">{{ doc.grand_total or 0 }}</span>&#2547;
+									</td>
+								</tr>
+								<tr>
+									{% set c = doc.name %}
+									{% set d = frappe.db.get_value("Payment Entry Reference", {"reference_name": c }, "parent") %}
+									{% set e = frappe.db.get_value("Payment Entry", {"name": d }, "posting_date") %}
+									{% set f = frappe.db.get_value("Payment Entry", {"name": d }, "paid_amount") %}
+
+									<!-- Set default values if any of the retrieved values are None -->
+									{% set e = e or '' %}
+									{% set f = f or 0 %}
+
+									<td colspan='3'
+										style="text-align: right; color:green !important;">
+										Payment Received on {{ frappe.utils.formatdate(e) }}
+									</td>
+									<td colspan='1'
+										style="text-align: right; font-weight: normal;border:none;color:green !important;">
+										{{ frappe.utils.fmt_money(f, precision=0, currency=doc.currency) }}
+									</td>
+								</tr>
+								<tr>
+									{% set total_due = doc.grand_total - f %}
+									<td colspan="3" class="text-right">Due :</td>
+									<td class="text-right">{{ frappe.utils.fmt_money(total_due, precision=0, currency=doc.currency) }}&#2547;</td>
+								</tr>
+
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="amountinWords">
+						<p>Amount in words: <span
+							id="amountinWords">{{ frappe.utils.money_in_words(doc.grand_total) }}</span>
+						</p>
+					</div>
+					<br>
+					<div class="signatures">
+						<div class="customer_signature">
+							<p style="margin-bottom: 0px;"></p>
+							<p>Customer signature</p>
+						</div>
+						<div class="admin_signature">
+							<img src="/files/signature.png" alt=""><br>
+							<p>Authorized signature</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block script %}
+	<script> {% include "templates/pages/order.js" %}</script>
+	<script>
+		window.doc_info = {
+			customer: '{{doc.customer}}',
+			doctype: '{{ doc.doctype }}',
+			doctype_name: '{{ doc.name }}',
+			grand_total: '{{ doc.grand_total }}',
+			currency: '{{ doc.currency }}'
+		}
+	</script>
+{% endblock %}

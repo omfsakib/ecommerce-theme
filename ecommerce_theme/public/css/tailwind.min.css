@@ -3110,6 +3110,9 @@ p {
 #topnav.nav-sticky .logo .l-light {
 	display: none
 }
+.justify-end{
+	justify-content: end;
+}
 
 .logo {
 	-webkit-margin-end: 15px;
