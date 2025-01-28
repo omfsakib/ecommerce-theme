@@ -6,24 +6,32 @@
 	</a>
 {%- endmacro -%}
 
-<div class="container relative">
-	<div class="grid grid-cols-1 justify-center text-center mb-6">
-		{%- if title -%}
-			<h5 class="font-semibold text-3xl leading-normal mb-4">{{ values.title }}</h5>
-		{%- endif -%}
-		{%- if subtitle -%}
-			<p class="text-slate-400 max-w-xl mx-auto">{{ values.subtitle }}</p>
-		{%- endif -%}
-	</div><!--end grid-->
-
-	<div class="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 grid-cols-2 pt-6 gap-6">
-
-		{%- for index in ['1', '2', '3', '4', '5'] -%}
-			{%- set category = values['category_' + index] -%}
-			{%- if category -%}
-				{%- set category = frappe.get_doc("Item Group", category) -%}
-				{{ card(category.name, category.image, category.route) }}
+<div class="relative md:py-24 py-16">
+	<div class="tp-login-shape">
+		<img class="tp-login-shape-1 reveal__left" src="/assets/ecommerce_theme/images/shape-1.png" alt="">
+		<img class="tp-login-shape-2 reveal__left" src="/assets/ecommerce_theme/images/shape-2.png" alt="">
+		<img class="tp-login-shape-3 reveal__right" src="/assets/ecommerce_theme/images/shape-3.png" alt="">
+		<img class="tp-login-shape-4 reveal__right" src="/assets/ecommerce_theme/images/shape-4.png" alt="">
+	</div>
+	<div class="container relative">
+		<div class="grid grid-cols-1 justify-center text-center mb-6">
+			{%- if title -%}
+				<h5 class="font-semibold text-3xl leading-normal mb-4 reveal__top">{{ values.title }}</h5>
 			{%- endif -%}
-		{% endfor %}
-	</div><!--end grid-->
-</div><!--end container-->
+			{%- if subtitle -%}
+				<p class="text-slate-400 max-w-xl mx-auto reveal__bottom">{{ values.subtitle }}</p>
+			{%- endif -%}
+		</div><!--end grid-->
+
+		<div class="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 grid-cols-2 pt-6 gap-6 reveal__bottom">
+
+			{%- for index in ['1', '2', '3', '4', '5'] -%}
+				{%- set category = values['category_' + index] -%}
+				{%- if category -%}
+					{%- set category = frappe.get_doc("Item Group", category) -%}
+					{{ card(category.name, category.image, category.route) }}
+				{%- endif -%}
+			{% endfor %}
+		</div><!--end grid-->
+	</div><!--end container-->
+</div>

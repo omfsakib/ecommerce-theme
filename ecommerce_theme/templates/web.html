@@ -58,14 +58,14 @@
 	  data-path="{{ path | e }}" {%- if template and template.endswith('.md') %}
 	  frappe-content-type="markdown" {%- endif %} class="dark:bg-slate-900 {{ body_class or '' }}">
 {% block preloader %}
-	<div id="preloader">
-		<div id="status">
-			<div class="spinner">
-				<div class="double-bounce1"></div>
-				<div class="double-bounce2"></div>
-			</div>
-		</div>
-	</div>
+{#	<div id="preloader">#}
+{#		<div id="status">#}
+{#			<div class="spinner">#}
+{#				<div class="double-bounce1"></div>#}
+{#				<div class="double-bounce2"></div>#}
+{#			</div>#}
+{#		</div>#}
+{#	</div>#}
 {% endblock %}
 
 {%- block banner -%}
@@ -207,6 +207,7 @@
 {%- endblock %}
 <!-- csrf_token -->
 {%- block body_include %}{{ body_include or "" }}{% endblock -%}
+<script src="/assets/ecommerce_theme/js/scrollreveal.min.js"></script>
 <script src="/assets/ecommerce_theme/libs/tobii/js/tobii.min.js"></script>
 <script src="/assets/ecommerce_theme/libs/feather-icons/feather.min.js"></script>
 <script src="/assets/ecommerce_theme/js/plugins.init.js"></script>

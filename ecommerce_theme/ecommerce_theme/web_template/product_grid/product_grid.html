@@ -3,25 +3,26 @@
 {% set cart_products = get_cart_products() %}
 
 
-<div class="grid grid-cols-1 justify-center text-center mb-6">
-	<h5 class="font-semibold text-3xl leading-normal mb-4">{{ values.title }}</h5>
-	<p class="text-slate-400 max-w-xl mx-auto">{{ values.subtitle }}</p>
-</div><!--end grid-->
+<div class="relative md:py-24 py-16 container">
+	<div class="grid grid-cols-1 justify-center text-center mb-6">
+		<h5 class="font-semibold text-3xl leading-normal mb-4">{{ values.title }}</h5>
+		<p class="text-slate-400 max-w-xl mx-auto">{{ values.subtitle }}</p>
+	</div><!--end grid-->
 
-<div class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-2 pt-6 gap-6">
-	{%- for index in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] -%}
-		{%- set item = values['item_' + index] -%}
-		{%- if item -%}
-			{%- set web_item = frappe.get_doc("Website Item", item) -%}
-			{{ product_card(web_item, settings, cart_products) }}
-		{%- endif -%}
-	{%- endfor -%}
-</div><!--end grid-->
-
+	<div class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-2 pt-6 gap-6">
+		{%- for index in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] -%}
+			{%- set item = values['item_' + index] -%}
+			{%- if item -%}
+				{%- set web_item = frappe.get_doc("Website Item", item) -%}
+				{{ product_card(web_item, settings, cart_products) }}
+			{%- endif -%}
+		{%- endfor -%}
+	</div><!--end grid-->
+</div>
 <script>
-	$('.like-action-item-fp').on('click',(e) => {
-			// Bind action on wishlist button
-			const $btn = $(e.currentTarget);
-			webshop.webshop.wishlist.wishlist_action($btn);
-		});
+	$('.like-action-item-fp').on('click', (e) => {
+		// Bind action on wishlist button
+		const $btn = $(e.currentTarget);
+		webshop.webshop.wishlist.wishlist_action($btn);
+	});
 </script>

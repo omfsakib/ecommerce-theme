@@ -1223,6 +1223,10 @@ img, video {
 	height: 22px !important
 }
 
+.h-\[30px\] {
+	height: 30px !important
+}
+
 .h-\[35px\] {
 	height: 35px !important
 }
@@ -3110,7 +3114,8 @@ p {
 #topnav.nav-sticky .logo .l-light {
 	display: none
 }
-.justify-end{
+
+.justify-end {
 	justify-content: end;
 }
 
@@ -3657,11 +3662,6 @@ p {
 	}
 }
 
-@media (min-width: 576px) {
-	.tagline-height {
-		top: 47px !important
-	}
-}
 
 .sidebar-nav {
 	padding: 15px 0
@@ -4685,7 +4685,8 @@ html[dir=rtl] .tns-visually-hidden {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
-.text-ellipsis{
+
+.text-ellipsis {
 	text-overflow: ellipsis;
 }
 
@@ -5579,4 +5580,58 @@ element {
 
 .filter-label.mb-3 {
 	border-bottom-width: 1px !important
+}
+
+
+.tp-login-shape-1 {
+	top: 7%;
+	left: 5%;
+}
+
+.tp-login-shape-1, .tp-login-shape-2, .tp-login-shape-3, .tp-login-shape-4 {
+	position: absolute;
+	z-index: -1;
+}
+
+.tp-login-shape-2 {
+	bottom: 2%;
+	left: 3%;
+}
+
+.tp-login-shape-3 {
+	top: 7%;
+	right: 3%;
+}
+
+.tp-login-shape-4 {
+	bottom: -9%;
+	right: 1%;
+	display: none;
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+	.tp-login-shape-1 {
+		left: 4%;
+	}
+
+	.tp-login-shape-2 {
+		left: 8%;
+	}
+
+	.tp-login-shape-3 {
+		right: 10%;
+	}
+
+	.tp-login-shape-4 {
+		right: 1%;
+		display: block;
+	}
+}
+
+@media only screen and (min-width: 1199px) {
+
+	.tp-login-shape-4 {
+		right: 2%;
+		display: block;
+	}
 }

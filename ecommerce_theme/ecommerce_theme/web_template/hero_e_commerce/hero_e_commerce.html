@@ -1,18 +1,21 @@
 <!-- Start Hero -->
-<div class="container relative">
-	<div class="grid grid-cols-1 justify-center">
-		<div class="text-center">
-			<span class="uppercase font-semibold text-lg">{{ values.title }}</span>
-			<h4 class="md:text-6xl text-4xl md:leading-normal leading-normal font-bold my-3">
-				{{ values.subtitle }}</h4>
-			<p class="text-lg">{{ values.description|safe }}</p>
+<div
+	class="relative md:flex table w-full items-center md:h-screen py-36 bg-emerald-500/5  md:bg-top bg-center bg-no-repeat bg-cover">
+	<div class="container relative">
+		<div class="grid grid-cols-1 justify-center">
+			<div class="text-center hero__content">
+				<span class="uppercase font-semibold text-lg">{{ values.title }}</span>
+				<h4 class="md:text-6xl text-4xl md:leading-normal leading-normal font-bold my-3">
+					{{ values.subtitle }}</h4>
+				<p class="text-lg">{{ values.description|safe }}</p>
 
-			<div class="mt-6">
-				<a href="{{ values.redirect_url }}"
-				   class="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-center bg-slate-900 dark:bg-orange-500 text-white rounded-md">
-					{{ values.button_name }}<i class="mdi mdi-arrow-right"></i></a>
+				<div class="mt-6">
+					<a href="{{ values.redirect_url }}"
+					   class="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-center bg-slate-900 dark:bg-orange-500 text-white rounded-md">
+						{{ values.button_name }}<i class="mdi mdi-arrow-right"></i></a>
+				</div>
 			</div>
-		</div>
-	</div><!--end grid-->
-</div><!--end container-->
+		</div><!--end grid-->
+	</div><!--end container-->
+</div>
 <!-- End Hero -->

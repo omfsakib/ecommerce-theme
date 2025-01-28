@@ -971,3 +971,24 @@ $(document).ready(function() {
 });
 
 
+/*=============== SCROLL REVEAL ANIMATION ===============*/
+const sr = ScrollReveal({
+    distance: '60px',
+    duration: 1000,
+    delay: 300,
+    // reset: true
+})
+
+sr.reveal(`.hero__content`, {delay: 300})
+//
+sr.reveal(`.logo, `, {
+    origin: 'top',
+    interval: 100
+})
+// sr.reveal(`.specs__data, .discount__animate`, {origin: 'left', interval: 100})
+sr.reveal(`.reveal__left`, {origin: 'left'})
+sr.reveal(`.reveal__right`, {origin: 'right'})
+sr.reveal(`.reveal__top`, {origin: 'top'})
+sr.reveal(`.reveal__bottom`, {origin: 'bottom'})
+// sr.reveal(`.case__img`, {origin: 'top'})
+// sr.reveal(`.case__data`)

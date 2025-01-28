@@ -24,16 +24,16 @@
 
 <!-- Start Navbar -->
 <nav id="topnav" class="defaultscroll is-sticky tagline-height">
-	<div class="container relative">
+	<div class="container relative nav__container">
 		<!-- Logo container-->
 		<a class="logo" href="{{ url_prefix }}{{ home_page or "/" }}">
 			<div>
 				{% if navbar_template_values %}
 					<img src="{{ navbar_template_values['logo_dark'] }}"
-						 class="h-[22px] inline-block dark:hidden"
+						 class="h-[30px] inline-block dark:hidden"
 						 alt="">
 					<img src="{{ navbar_template_values['logo_light'] }}"
-						 class="h-[22px] hidden dark:inline-block"
+						 class="h-[30px] hidden dark:inline-block"
 						 alt="">
 				{%- elif brand_html -%}
 						{{ brand_html }}

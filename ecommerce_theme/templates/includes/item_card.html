@@ -9,8 +9,10 @@
 	<div class="group" itemscope itemtype="http://schema.org/Product">
 		<div
 			class="relative overflow-hidden shadow dark:shadow-gray-800 group-hover:shadow-lg group-hover:dark:shadow-gray-800 rounded-md duration-500">
-			<img src="{{ image }}" itemprop="image"
-				 class="group-hover:scale-110 w-100 duration-500" alt="{{ title }}">
+			<a href="/{{ item.route or '#' }}">
+				<img src="{{ image }}" itemprop="image"
+					 class="group-hover:scale-110 w-100 duration-500" alt="{{ title }}">
+			</a>
 
 			<div class="absolute -bottom-20 group-hover:bottom-3 start-3 end-3 duration-500">
 				{% if item.item_code in cart_products %}
@@ -65,7 +67,8 @@
 				{% if settings.show_price %}
 					<p class="lg:text-lg md:text-base text-xs" itemprop="offers" itemscope
 					   itemtype="http://schema.org/Offer">
-						<span class="hidden" itemprop="price">{{ product_info.price_list_rate }}</span>
+						<span class="hidden"
+							  itemprop="price">{{ product_info.price_list_rate }}</span>
 						<span>{{ product_info.formatted_price }}</span>
 						<meta itemprop="priceCurrency" content="BDT">
 						<!-- Adjust the currency accordingly -->
