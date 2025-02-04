@@ -954,22 +954,6 @@ $(document).ready(function() {
         }
     });
 });
-$(document).ready(function() {
-    $('.show-filter').on('click', function() {
-        // Toggle the 'hidden' class on the #filter-section
-        $('#product-filters').toggleClass('hidden');
-
-        // Check if the #filter-section is visible (i.e., 'hidden' class is removed)
-        if ($('#product-filters').hasClass('hidden')) {
-            // If the filter section is hidden, change the button text to 'Show Filters'
-            $(this).text('Show Filters');
-        } else {
-            // If the filter section is visible, change the button text to 'Hide Filters'
-            $(this).text('Hide Filters');
-        }
-    });
-});
-
 
 /*=============== SCROLL REVEAL ANIMATION ===============*/
 const sr = ScrollReveal({
@@ -986,8 +970,8 @@ sr.reveal(`.logo, `, {
     interval: 100
 })
 // sr.reveal(`.specs__data, .discount__animate`, {origin: 'left', interval: 100})
-sr.reveal(`.reveal__left`, {origin: 'left'})
-sr.reveal(`.reveal__right`, {origin: 'right'})
+sr.reveal(`.reveal__left`, {origin: 'top'})
+sr.reveal(`.reveal__right`, {origin: 'bottom'})
 sr.reveal(`.reveal__top`, {origin: 'top'})
 sr.reveal(`.reveal__bottom`, {origin: 'bottom'})
 // sr.reveal(`.case__img`, {origin: 'top'})

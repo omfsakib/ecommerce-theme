@@ -2145,6 +2145,14 @@ img, video {
 	padding-top: 1.5rem !important
 }
 
+.pt-24 {
+	padding-top: 6rem !important;
+}
+
+.pb-12 {
+	padding-bottom: 3rem !important;
+}
+
 .text-left {
 	text-align: left !important
 }
@@ -4406,6 +4414,11 @@ html[dir=rtl] .tns-visually-hidden {
 		padding-left: 12px
 	}
 
+	.md\:py-36 {
+		padding-top: 9rem !important;
+		padding-bottom: 9rem !important;
+	}
+
 	@media (min-width: 540px) {
 		.md\:container {
 			max-width: 540px
@@ -4416,11 +4429,12 @@ html[dir=rtl] .tns-visually-hidden {
 		padding-right: 1rem;
 		padding-left: 1rem
 	}
-}@media (min-width: 768px) {
-	.md\:container {
-		max-width: 768px
-	}
-}@media (min-width: 992px) {
+}
+	@media (min-width: 768px) {
+		.md\:container {
+			max-width: 768px
+		}
+	}@media (min-width: 992px) {
 	.md\:container {
 		max-width: 992px
 	}
@@ -4642,6 +4656,11 @@ html[dir=rtl] .tns-visually-hidden {
 		text-align: end !important
 	}
 
+	.md\:text-lg {
+		font-size: 18px !important;
+		line-height: 28px !important
+	}
+
 	.md\:text-base {
 		font-size: 1rem !important;
 		line-height: 1.5rem !important
@@ -4650,6 +4669,11 @@ html[dir=rtl] .tns-visually-hidden {
 	.md\:text-3xl {
 		font-size: 1.875rem !important;
 		line-height: 2.25rem !important
+	}
+
+	.md\:text-4xl {
+		font-size: 2.25rem !important;
+		line-height: 2.5rem !important
 	}
 
 	.md\:text-5xl {
@@ -4971,7 +4995,7 @@ html[dir=rtl] .tns-visually-hidden {
 
 .modal.fade .modal-dialog {
 	transition: transform .3s ease-out;
-	transform: translate(0, -50px);
+	transform: translate(0, 13px);
 }
 
 .modal-dialog {
@@ -5634,4 +5658,8 @@ element {
 		right: 2%;
 		display: block;
 	}
+}
+
+.dark .modal-content{
+	background-color: rgb(15 23 42 / var(--tw-bg-opacity)) !important;
 }

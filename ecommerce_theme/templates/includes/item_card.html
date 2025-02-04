@@ -6,7 +6,7 @@
 	{%- set product_info = get_product_info(item.item_code) -%}
 	{%- set product_reviews = get_product_reviews(item.name or frappe.db.get_value('Website Item', {'item_code': item.item_code}, 'name')) -%}
 
-	<div class="group" itemscope itemtype="http://schema.org/Product">
+	<div class="group reveal__left" itemscope itemtype="http://schema.org/Product">
 		<div
 			class="relative overflow-hidden shadow dark:shadow-gray-800 group-hover:shadow-lg group-hover:dark:shadow-gray-800 rounded-md duration-500">
 			<a href="/{{ item.route or '#' }}">
