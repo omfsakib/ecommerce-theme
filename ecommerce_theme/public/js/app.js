@@ -764,7 +764,7 @@ webshop.ProductGrid = class CustomProductGrid extends OriginalProductGrid {
 			let title = item.web_item_name || item.item_name || item.item_code || "";
 			title = title.length > 90 ? title.substr(0, 90) + "..." : title;
 
-			html += `<div class="group"><div class="relative overflow-hidden shadow dark:shadow-gray-800 group-hover:shadow-lg group-hover:dark:shadow-gray-800 rounded-md duration-500">`;
+			html += `<a href="/${item.route || '#'}" class="group"><div class="relative overflow-hidden shadow dark:shadow-gray-800 group-hover:shadow-lg group-hover:dark:shadow-gray-800 rounded-md duration-500">`;
 			html += me.get_image_html(item, title);
 			html += `<div class="absolute -bottom-20 group-hover:bottom-3 start-3 end-3 duration-500">`
 			html += me.get_primary_button(item, me.settings);
@@ -772,7 +772,7 @@ webshop.ProductGrid = class CustomProductGrid extends OriginalProductGrid {
 			html += me.get_hover_buttons(item, me.settings);
 			html += `</div>`;
 			html += me.get_card_body_html(item, title, me.settings);
-			html += `</div>`;
+			html += `</a>`;
 		});
 
 		let $product_wrapper = this.products_section;
