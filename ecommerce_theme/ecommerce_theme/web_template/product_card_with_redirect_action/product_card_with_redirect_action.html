@@ -5,11 +5,11 @@
 <div class="container relative md:mt-24 mt-16">
 	<div class="grid items-end md:grid-cols-2 mb-6">
 		<div class="md:text-start text-center">
-			<h5 class="font-semibold text-3xl leading-normal mb-4">{{ values.title }}</h5>
-			<p class="text-slate-400 max-w-xl">{{ values.subtitle }}</p>
+			<h5 class="font-semibold text-3xl leading-normal mb-4 reveal__top">{{ values.title }}</h5>
+			<p class="text-slate-400 max-w-xl reveal__bottom">{{ values.subtitle }}</p>
 		</div>
 
-		<div class="md:text-end hidden md:block">
+		<div class="md:text-end hidden md:block reveal__right">
 			<a href="{{ values.redirect_url }}"
 			   class="text-slate-400 hover:text-orange-500">{{ values.redirect_button_name }}<i
 				class="mdi mdi-arrow-right"></i></a>
@@ -26,7 +26,7 @@
 		{%- endfor -%}
 	</div><!--end grid-->
 
-	<div class="grid grid-cols-1 mt-6">
+	<div class="grid grid-cols-1 mt-6 reveal__right">
 		<div class="text-center md:hidden block">
 			<a href="{{ values.redirect_url }}"
 			   class="text-slate-400 hover:text-orange-500">{{ values.redirect_button_name }} <i

@@ -15,7 +15,7 @@
 			<div class="container relative">
 				<div class="grid lg:grid-cols-1">
 					<div class="relative overflow-x-auto shadow dark:shadow-gray-800 rounded-md">
-						<table class="w-full text-start">
+						<table class="w-full text-start reveal__bottom">
 							<thead class="text-sm uppercase bg-slate-50 dark:bg-slate-800">
 							<tr>
 								<th scope="col" class="p-4 w-4"></th>
@@ -115,7 +115,7 @@
 								<!-- Apply Coupon Code  -->
 								{% set show_coupon_code = cart_settings.show_apply_coupon_code_in_website and cart_settings.enable_checkout %}
 								{% if show_coupon_code == 1 %}
-									<div class="p-4">
+									<div class="p-4 reveal__left">
 										<div class="flex justify-between ">
 											<input type="text"
 												   class="txtcoupon py-2 px-5 w-full border-0 focus:ring-0 outline-none bg-white dark:bg-slate-900 shadow dark:shadow-gray-800"
@@ -133,7 +133,7 @@
 								{% endif %}
 								{% if cart_settings.enable_checkout or cart_settings.show_price_in_quotation %}
 									{% set total_items = frappe.utils.cstr(frappe.utils.flt(doc.total_qty, 0)) %}
-									<li class="flex justify-between p-4">
+									<li class="flex justify-between p-4 reveal__right">
 										<span
 											class="font-semibold text-md-left text-slate-400">{{ _("Net Total (") + total_items + _(" Products)") }}</span>
 										<span
@@ -141,7 +141,7 @@
 									</li>
 									{% for d in doc.taxes %}
 										{% if d.base_tax_amount %}
-											<li class="flex justify-between p-4">
+											<li class="flex justify-between p-4 reveal__left">
 												<span
 													class="font-semibold text-lg">{{ d.description }}</span>
 												<span
@@ -149,7 +149,7 @@
 											</li>
 										{% endif %}
 									{% endfor %}
-									<li class="flex justify-between p-4">
+									<li class="flex justify-between p-4 reveal__right">
 										<span
 											class="font-semibold text-lg">{{ _("Grand Total") }}</span>
 										<span
@@ -157,27 +157,7 @@
 									</li>
 								{% endif %}
 
-								<li class="flex justify-between p-4 border-t border-gray-100 dark:border-gray-800">
-									{% if cart_settings.enable_checkout %}
-										<button
-											class="btn-place-order py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center bg-orange-500 text-white rounded-md"
-											type="button">
-											{{ _('Place Order') }}
-										</button>
-									{% else %}
-										<button
-											class="btn-request-for-quotation py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center bg-orange-500 text-white rounded-md"
-											type="button">
-											{{ _('Request for Quote') }}
-										</button>
-									{% endif %}
-									{% if addresses | length == 1 %}
-										{% set select_address = True %}
-									{% endif %}
-									<button class="py-2 px-3 font-semibold tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white btn-new-address"
-									   role="button">{{ _("Add a new address") }}</button>
-								</li>
-								<li class=" p-4 border-t border-gray-100 dark:border-gray-800">
+								<li class=" p-4 border-t border-gray-100 dark:border-gray-800 reveal__left">
 								{% for address in shipping_addresses %}
 									{% if doc.shipping_address_name == address.name %}
 										<div class="row no-gutters" data-fieldname="shipping_address_name">
@@ -204,9 +184,30 @@
 									{% endif %}
 								{% endfor %}
 								</li>
-								<li class="p-4 border-t border-gray-100 dark:border-gray-800">
+
+								<li class="flex justify-between p-4 border-t border-gray-100 dark:border-gray-800 reveal__right">
+									{% if cart_settings.enable_checkout %}
+										<button
+											class="btn-place-order py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center bg-orange-500 text-white rounded-md"
+											type="button">
+											{{ _('Place Order') }}
+										</button>
+									{% else %}
+										<button
+											class="btn-request-for-quotation py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center bg-orange-500 text-white rounded-md"
+											type="button">
+											{{ _('Request for Quote') }}
+										</button>
+									{% endif %}
+									{% if addresses | length == 1 %}
+										{% set select_address = True %}
+									{% endif %}
+									<button class="py-2 px-3 font-semibold tracking-wide align-middle text-base text-center rounded-md bg-orange-500/5 hover:bg-orange-500 text-orange-500 hover:text-white btn-new-address"
+									   role="button">{{ _("Add a new address") }}</button>
+								</li>
+								<li class="p-4 border-t border-gray-100 dark:border-gray-800 hidden">
 								<!-- Billing Address -->
-									<div class="checkbox ml-1 mb-2">
+									<div class="checkbox ml-1 mb-2 hidden">
 										<label for="input_same_billing">
 											<input type="checkbox" class="product-filter" id="input_same_billing" checked style="width: 14px !important">
 											<span class="label-area font-md">{{ _('Billing Address is same as Shipping Address') }}</span>
@@ -242,7 +243,7 @@
 							</ul>
 						</div>
 
-						<div class="lg:col-span-4 md:order-2 order-1">
+						<div class="lg:col-span-4 md:order-2 order-1 reveal__bottom">
 							<div class="space-y-1">
 								{% if cart_settings.enable_checkout %}
 									<a class="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-base text-center bg-orange-500 text-white rounded-md mt-2"
@@ -278,7 +279,7 @@
 			</div><!--end container-->
 		</section>
 	{% else %}
-		<div class="cart-empty frappe-card">
+		<div class="cart-empty frappe-card reveal__bottom">
 		<div class="cart-empty-state">
 			<img src="/assets/webshop/images/cart-empty-state.png" alt="Empty State">
 		</div>
@@ -319,7 +320,9 @@ frappe.ready(() => {
 					label: __('Address Title'),
 					fieldname: 'address_title',
 					fieldtype: 'Data',
-					reqd: 1
+					reqd: 1,
+					default: "Shipping Address",
+					hidden: 1
 				},
 				{
 					label: __('Address Line 1'),
@@ -330,7 +333,8 @@ frappe.ready(() => {
 				{
 					label: __('Address Line 2'),
 					fieldname: 'address_line2',
-					fieldtype: 'Data'
+					fieldtype: 'Data',
+					hidden: 1
 				},
 				{
 					label: __('City/Town'),
@@ -341,7 +345,8 @@ frappe.ready(() => {
 				{
 					label: __('State'),
 					fieldname: 'state',
-					fieldtype: 'Data'
+					fieldtype: 'Data',
+					hidden:1
 				},
 				{
 					label: __('Country'),
@@ -350,7 +355,8 @@ frappe.ready(() => {
 					options: 'Country',
 					only_select: true,
 					reqd: 1,
-					default: 'Bangladesh'
+					default: 'Bangladesh',
+					hidden:1
 				},
 				{
 					fieldname: "column_break0",
@@ -365,12 +371,15 @@ frappe.ready(() => {
 						'Billing',
 						'Shipping'
 					],
-					reqd: 1
+					reqd: 1,
+					hidden:1,
+					default: 'Shipping'
 				},
 				{
 					label: __('Postal Code'),
 					fieldname: 'pincode',
-					fieldtype: 'Data'
+					fieldtype: 'Data',
+					hidden:1
 				},
 				{
 					fieldname: "phone",

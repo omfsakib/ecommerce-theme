@@ -1,16 +1,16 @@
 <div class="grid grid-cols-1">
 	<div
-		class="relative overflow-hidden py-24 px-4 md:px-10 bg-orange-600 bg-center bg-no-repeat bg-cover"
+		class="relative overflow-hidden py-12 md:py-24 px-4 md:px-10 bg-orange-600 bg-center bg-no-repeat bg-cover"
 		style="background-image: url('{{ values.bg_image }}')">
 		<div
 			class="absolute inset-0  bg-center bg-no-repeat bg-cover"
 			style="background-image: url('/assets/ecommerce_theme/images/hero/bg-shape.png')"></div>
 		<div class="grid grid-cols-1 justify-center text-center relative z-1">
-			<h3 class="text-4xl leading-normal tracking-wide font-bold text-white">{{ values.title }}
+			<h3 class="text-2xl md:text-4xl leading-normal tracking-wide font-bold text-white reveal__top">{{ values.title }}
 				<br> {{ values.subtitle }}</h3>
 			<span id="date" class="hidden">{{ values.date }}</span>
 			<div id="countdown" class="mt-6">
-				<ul class="count-down list-none inline-block space-x-1">
+				<ul class="count-down list-none inline-block space-x-1 reveal__bottom">
 					<li id="days"
 						class="text-[28px] leading-[72px] h-[80px] w-[80px] font-medium rounded-md shadow shadow-gray-100 inline-block text-center text-white">
 						2
@@ -30,7 +30,7 @@
 					<li id="end" class="h1"></li>
 				</ul>
 			</div>
-			<div class="mt-4">
+			<div class="mt-4 reveal__right">
 				<a href="{{ values.redirect_url }}"
 				   class="py-2 px-5 inline-block font-semibold tracking-wide align-middle text-center bg-white text-orange-500 rounded-md"><i
 					class="mdi mdi-cart-outline"></i> {{ values.button_name }}</a>
