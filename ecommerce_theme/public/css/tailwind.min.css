@@ -5663,3 +5663,6 @@ element {
 .dark .modal-content{
 	background-color: rgb(15 23 42 / var(--tw-bg-opacity)) !important;
 }
+.item-thumb {
+    height: auto !important;
+}

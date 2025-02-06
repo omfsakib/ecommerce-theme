@@ -364,6 +364,67 @@ webshop.ProductSearch = class CustomProductSearch extends OriginalProductSearch 
 		this.setupRecentsContainer();
 	}
 
+	setupProductsContainer() {
+		this.products_container = this.search_dropdown.append(`
+			<div id="product-results mt-2">
+				<div class="flex flex-col space-y-1" id="product-scroll" style="overflow: scroll; max-height: 300px">
+				</div>
+			</div>
+		`).find("#product-scroll");
+	}
+
+
+	populateRecentSearches() {
+		let recents = this.getRecentSearches();
+
+		if (!recents.length) {
+			this.recents_container.html(`<span class=""text-muted">No searches yet.</span>`);
+			return;
+		}
+
+		let html = "";
+		recents.forEach((key) => {
+			html += `
+				<div class="recent-search flex space-x-1 items-center" style="font-size: 13px">
+					<span class="mr-1">
+						<svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="black" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+							<path d="M8.00027 5.20947V8.00017L10 10" stroke="black" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+					</span>
+					<span>${key}</span>
+				</div>
+			`;
+		});
+
+		this.recents_container.html(html);
+		this.attachEventListenersToChips();
+	}
+
+	populateResults(product_results) {
+		if (!product_results || product_results.length === 0) {
+			let empty_html = ``;
+			this.products_container.html(empty_html);
+			return;
+		}
+
+		let html = "";
+
+		product_results.forEach((res) => {
+			let thumbnail = res.thumbnail || '/assets/webshop/images/cart-empty-state.png';
+			html += `
+				<div class="dropdown-item flex space-x-1">
+					<img class="item-thumb col-2" src=${encodeURI(thumbnail)} />
+					<div class="col-9" style="white-space: normal;">
+						<a class="hover:text-orange-500 lg:text-sm md:text-sm text-xs font-medium" href="/${res.route}">${res.web_item_name}</a>
+					</div>
+				</div>
+			`;
+		});
+
+		this.products_container.html(html);
+	}
+
 	populateCategoriesList(category_results) {
 		if (!category_results || category_results.length === 0) {
 			let empty_html = `
@@ -406,7 +467,7 @@ webshop.ProductView = class CustomProductView extends OriginalProductView {
 		super(options);
 	}
 
-	get_item_filter_data(from_filters=false) {
+	get_item_filter_data(from_filters = false) {
 		// Get and render all Product related views
 		let me = this;
 		this.from_filters = from_filters;
@@ -419,7 +480,7 @@ webshop.ProductView = class CustomProductView extends OriginalProductView {
 			args: {
 				query_args: args
 			},
-			callback: function(result) {
+			callback: function (result) {
 				if (!result || result.exc || !result.message || result.message.exc) {
 					me.render_no_products_section(true);
 				} else {
@@ -939,35 +1000,35 @@ frappe.ready(function () {
 	}
 });
 
-$(document).ready(function() {
-    $('.show-filter').on('click', function() {
-        // Toggle the 'hidden' class on the #filter-section
-        $('#filter-section').toggleClass('hidden');
+$(document).ready(function () {
+	$('.show-filter').on('click', function () {
+		// Toggle the 'hidden' class on the #filter-section
+		$('#filter-section').toggleClass('hidden');
 
-        // Check if the #filter-section is visible (i.e., 'hidden' class is removed)
-        if ($('#filter-section').hasClass('hidden')) {
-            // If the filter section is hidden, change the button text to 'Show Filters'
-            $(this).text('Show Filters');
-        } else {
-            // If the filter section is visible, change the button text to 'Hide Filters'
-            $(this).text('Hide Filters');
-        }
-    });
+		// Check if the #filter-section is visible (i.e., 'hidden' class is removed)
+		if ($('#filter-section').hasClass('hidden')) {
+			// If the filter section is hidden, change the button text to 'Show Filters'
+			$(this).text('Show Filters');
+		} else {
+			// If the filter section is visible, change the button text to 'Hide Filters'
+			$(this).text('Hide Filters');
+		}
+	});
 });
 
 /*=============== SCROLL REVEAL ANIMATION ===============*/
 const sr = ScrollReveal({
-    distance: '60px',
-    duration: 1000,
-    delay: 300,
-    // reset: true
+	distance: '60px',
+	duration: 1000,
+	delay: 300,
+	// reset: true
 })
 
 sr.reveal(`.hero__content`, {delay: 300})
 //
 sr.reveal(`.logo, `, {
-    origin: 'top',
-    interval: 100
+	origin: 'top',
+	interval: 100
 })
 // sr.reveal(`.specs__data, .discount__animate`, {origin: 'left', interval: 100})
 sr.reveal(`.reveal__left`, {origin: 'top'})
