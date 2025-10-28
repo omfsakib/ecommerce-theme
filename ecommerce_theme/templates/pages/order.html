@@ -272,16 +272,53 @@
 						}
 					</style>
 					<div class="heading">
-						<div class="logo">
-							<img src="/files/Logo-Light.png" alt="H A S H T A G">
-							<div class="content text-center">
-								<h2>StayhasHtag</h2>
-								<p>House-36/1, Block-A, Lane-2, Mirpur-6, Dhaka-1216</p>
-								<p>Mobile: +8801833371699, E-Mail: stayhashtag@gmail.com</p>
-							</div>
-							<img src="/assets/erpnext/images/favicon.png" alt="H A S H T A G">
+						<div class="logo text-center">
+							<!-- Company Logo -->
+							<img
+								src="{{ frappe.db.get_value('Company', doc.company, 'company_logo') or '/files/default_logo.png' }}"
+								alt="Company Logo">
+
+							<!-- Company Details -->
+							{% set address_name = frappe.db.get_value(
+    "Dynamic Link",
+    {"parenttype": "Address", "link_doctype": "Company", "link_name": doc.company},
+    "parent"
+) %}
+
+{% if address_name %}
+    {% set addr = frappe.get_doc("Address", address_name) %}
+{% endif %}
+
+<div class="content text-center">
+    <h2>{{ doc.company }}</h2>
+
+    {% if addr %}
+        <p>
+            {{ addr.address_line1 }}
+            {% if addr.address_line2 %}, {{ addr.address_line2 }}{% endif %}
+            {% if addr.city %}, {{ addr.city }}{% endif %}
+            {% if addr.state %}, {{ addr.state }}{% endif %}
+            {% if addr.pincode %}, {{ addr.pincode }}{% endif %}
+            {% if addr.country %}, {{ addr.country }}{% endif %}
+        </p>
+    {% else %}
+        <p><em>No company address found</em></p>
+    {% endif %}
+
+    <p>
+        Mobile: {{ frappe.db.get_value('Company', doc.company, 'phone_no') or 'N/A' }},
+        E-Mail: {{ frappe.db.get_value('Company', doc.company, 'email') or 'N/A' }}
+    </p>
+</div>
+
+
+							<!-- Secondary Logo -->
+							<img
+								src="{{ frappe.db.get_value('Company', doc.company, 'company_logo') or '/assets/erpnext/images/favicon.png' }}"
+								alt="Company Logo">
 						</div>
 					</div>
+
 					<div class="order_info">
 						<div class="order_details">
 							<p>Memo No: {{ doc.name }}</p>
@@ -394,7 +431,7 @@
 							<p>Customer signature</p>
 						</div>
 						<div class="admin_signature">
-							<img src="/files/signature.png" alt=""><br>
+							<img src="#" alt="">
 							<p>Authorized signature</p>
 						</div>
 					</div>
