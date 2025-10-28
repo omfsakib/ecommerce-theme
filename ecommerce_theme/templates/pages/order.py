@@ -3,7 +3,6 @@
 
 import frappe
 from frappe import _
-
 from webshop.webshop.doctype.webshop_settings.webshop_settings import show_attachments
 
 
@@ -39,9 +38,7 @@ def get_context(context):
 		frappe.throw(_("Not Permitted"), frappe.PermissionError)
 
 	# check for the loyalty program of the customer
-	customer_loyalty_program = frappe.db.get_value(
-		"Customer", context.doc.customer_name, "loyalty_program"
-	)
+	customer_loyalty_program = frappe.db.get_value("Customer", context.doc.customer_name, "loyalty_program")
 	if customer_loyalty_program:
 		from erpnext.accounts.doctype.loyalty_program.loyalty_program import (
 			get_loyalty_program_details_with_points,

@@ -1,6 +1,6 @@
-import frappe
 import json
 
+import frappe
 from frappe import cint
 from frappe.utils import flt
 from webshop.webshop.doctype.item_review.item_review import get_item_reviews
@@ -35,8 +35,9 @@ def get_price_discount_info(price_object):
 	# Check for discount and add to price details
 	if price_object.get("discount_percent"):
 		price_details["discount_percent"] = flt(price_object["discount_percent"])
-		price_details["discount_amount"] = price_object.get("formatted_discount_rate") or \
-										   price_object.get("formatted_discount_percent")
+		price_details["discount_amount"] = price_object.get("formatted_discount_rate") or price_object.get(
+			"formatted_discount_percent"
+		)
 
 	return price_details
 
@@ -51,27 +52,23 @@ def get_lowest_price_variant(item_code):
 	Check if the item is a template and find the variant with the lowest price.
 
 	Args:
-		item_code (str): The item code to check
+	        item_code (str): The item code to check
 
 	Returns:
-		str: The item code of the variant with the lowest price, or the original item code if not a template
+	        str: The item code of the variant with the lowest price, or the original item code if not a template
 	"""
 	# Check if the item is a template item (variant_of will be None if the item is a template)
 	template_item_code = frappe.db.get_value("Item", item_code, "variant_of")
 
 	if template_item_code is None:
 		# The given item_code is a template, fetch all variants
-		variant_item_codes = frappe.get_all(
-			"Item",
-			filters={"variant_of": item_code},
-			pluck="name"
-		)
+		variant_item_codes = frappe.get_all("Item", filters={"variant_of": item_code}, pluck="name")
 
 		# Fetch Item Prices for all variants in a single query
 		price_list_data = frappe.get_all(
 			"Item Price",
 			filters={"item_code": ["in", variant_item_codes]},
-			fields=["item_code", "price_list", "price_list_rate"]
+			fields=["item_code", "price_list", "price_list_rate"],
 		)
 
 		# Find the lowest price
@@ -91,18 +88,16 @@ def get_product_info(item_code):
 	and use that variant's item_code.
 
 	Args:
-		item_code (str): Code of the product
+	        item_code (str): Code of the product
 
 	Returns:
-		dict: Contains product pricing details including discount
+	        dict: Contains product pricing details including discount
 	"""
 	# Get the item code of the variant with the lowest price
 	item_code = get_lowest_price_variant(item_code)
 
 	# Fetch product info using the (possibly updated) item_code
-	product_info = get_product_info_for_website(item_code, skip_quotation_creation=True).get(
-		"product_info"
-	)
+	product_info = get_product_info_for_website(item_code, skip_quotation_creation=True).get("product_info")
 
 	if product_info and product_info.get("price"):
 		# Fetch price and discount information
@@ -124,9 +119,9 @@ class ExtendedProductQuery(ProductQuery):
 			# Get the item code of the variant with the lowest price
 			item_code = get_lowest_price_variant(item_code)
 
-			product_info = get_product_info_for_website(
-				item_code, skip_quotation_creation=True
-			).get("product_info")
+			product_info = get_product_info_for_website(item_code, skip_quotation_creation=True).get(
+				"product_info"
+			)
 
 			if product_info and product_info["price"]:
 				# update/mutate item and discount_list objects
@@ -152,15 +147,15 @@ def get_product_filter_data(query_args=None):
 	Returns filtered products and discount filters.
 
 	Args:
-		query_args (dict): contains filters to get products list
+	        query_args (dict): contains filters to get products list
 
 	Query Args filters:
-		search (str): Search Term.
-		field_filters (dict): Keys include item_group, brand, etc.
-		attribute_filters(dict): Keys include Color, Size, etc.
-		start (int): Offset items by
-		item_group (str): Valid Item Group
-		from_filters (bool): Set as True to jump to page 1
+	        search (str): Search Term.
+	        field_filters (dict): Keys include item_group, brand, etc.
+	        attribute_filters(dict): Keys include Color, Size, etc.
+	        start (int): Offset items by
+	        item_group (str): Valid Item Group
+	        from_filters (bool): Set as True to jump to page 1
 	"""
 	if isinstance(query_args, str):
 		query_args = json.loads(query_args)
